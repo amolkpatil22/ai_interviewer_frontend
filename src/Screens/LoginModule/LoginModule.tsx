@@ -1,32 +1,23 @@
-import { Box, Button, Flex, Input, Stack, StatLabel, TagLabel, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Input, Stack, Text } from "@chakra-ui/react";
 import React from "react";
-import { useForm } from "react-hook-form";
 import { Field } from "../../Components/ui/field";
+import { useLoginModule } from "./hooks/LoginModule.hook";
 
-interface FormValues {
-  email: string;
-  password: string;
-}
 export const LoginModule: React.FC = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>();
-
-  const onSubmit = handleSubmit((data) => console.log(data));
+  const { errors, onSubmit, register } = useLoginModule();
 
   return (
     <Flex flex={1} alignItems={"center"} height={"90vh"} justifyContent={"center"}>
       <Box
         padding={"3%"}
         boxShadow={"rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px"}
-        borderRadius={"20px"}
+        borderRadius={"3%"}
+        margin={"4%"}
       >
-        <Text fontWeight={"semibold"} fontFamily={"sans-serif"} fontSize={"xl"} mb={"15px"}>
+        <Text fontWeight={"semibold"} fontFamily={"sans-serif"} fontSize={"xl"} mb={"5%"}>
           Sign In
         </Text>
-        <Text color={"grey"} mb={"15px"}>
+        <Text color={"grey"} mb={"5%"}>
           Enter your email and password to Sign In.
         </Text>
 
