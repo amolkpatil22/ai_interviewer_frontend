@@ -1,11 +1,10 @@
-import { AlertDescription, Box, Flex, Input, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Input, Stack, Text } from "@chakra-ui/react";
 import React from "react";
 import { Field } from "../../Components/ui/field";
-import { useLoginModule } from "./hooks/LoginModule.hook";
-import { Button } from "../../Components/ui/button";
+import { useSignUpModule } from "./hooks/SignUpModule.hook";
 
-export const LoginModule: React.FC = () => {
-  const { errors, onSubmit, register, navigate, loginLoading } = useLoginModule();
+export const SignUpModule: React.FC = () => {
+  const { errors, onSubmit, register, navigate } = useSignUpModule();
 
   return (
     <Flex flex={1} alignItems={"center"} height={"90vh"} justifyContent={"center"}>
@@ -17,14 +16,14 @@ export const LoginModule: React.FC = () => {
         alignItems={"center"}
       >
         <Text fontWeight={"semibold"} fontFamily={"sans-serif"} fontSize={"xl"} mb={"5%"}>
-          Sign In
-        </Text>
-        <Text color={"grey"} mb={"5%"}>
-          Enter your email and password to Sign In.
+          Sign Up
         </Text>
 
         <form onSubmit={onSubmit}>
           <Stack gap="4" align="flex-start" maxW="sm">
+            <Field label="Name" invalid={!!errors.email} errorText={errors.name?.message}>
+              <Input borderRadius={"5px"} type="text" {...register("name", { required: "Name is required" })} />
+            </Field>
             <Field label="Email" invalid={!!errors.email} errorText={errors.email?.message}>
               <Input borderRadius={"5px"} type="email" {...register("email", { required: "Email is required" })} />
             </Field>
@@ -35,22 +34,15 @@ export const LoginModule: React.FC = () => {
                 {...register("password", { required: "Password is required" })}
               />
             </Field>
-            <Button
-              loadingText={"Sign In..."}
-              loading={loginLoading}
-              borderRadius={"5px"}
-              colorPalette={"purple"}
-              type="submit"
-              width={"100%"}
-            >
-              Sign In
+            <Button borderRadius={"5px"} colorPalette={"purple"} type="submit" width={"100%"}>
+              Create An Account
             </Button>
           </Stack>
         </form>
-        <Flex mt={"3%"} gap={"2%"} alignItems={"center"} justifyContent={"center"}>
-          <Text>Don't have an account ?</Text>
-          <Text color={"purple"} cursor={"pointer"} onClick={() => navigate("/signup")} fontWeight={"bold"}>
-            Sign up
+        <Flex width={"103%"} mt={"3%"} gap={"2%"} alignItems={"center"} justifyContent={"space-between"} flex={1}>
+          <Text>Already have an account ?</Text>
+          <Text color={"purple"} cursor={"pointer"} onClick={() => navigate("/login")} fontWeight={"bold"}>
+            Sign In
           </Text>
         </Flex>
       </Box>
