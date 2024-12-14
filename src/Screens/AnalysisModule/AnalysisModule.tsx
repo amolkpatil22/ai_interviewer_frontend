@@ -50,6 +50,7 @@ export const AnalysisModule: React.FC = () => {
               Your Overall Score: {score}
             </Text>
             <ProgressRoot
+              key={score}
               mt={"20px"}
               width={"99.5%"}
               max={10}
@@ -59,7 +60,7 @@ export const AnalysisModule: React.FC = () => {
               colorPalette={getScoreColor(score)}
             >
               <ProgressBar
-                border={"solid purple 2px"}
+                border={"solid #9333E9 2px"}
                 borderRadius={"10px"}
                 height={"20px"}
                 width={"100%"}
@@ -74,7 +75,7 @@ export const AnalysisModule: React.FC = () => {
               </Flex>
             </ProgressRoot>
             <Flex justifyContent={"space-between"} width={"100%"} margin={"auto"} flex={1}>
-              <Text fontWeight={"bold"} color={"#FF5733"}>
+              <Text fontWeight={"bold"} color={"red"}>
                 0
               </Text>
               <Text fontWeight={"bold"} color={"#FF5733"}>
