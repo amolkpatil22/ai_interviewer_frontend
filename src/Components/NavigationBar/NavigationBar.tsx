@@ -2,8 +2,10 @@ import { Box, Flex, Icon, Image, Text } from "@chakra-ui/react";
 import React from "react";
 import { Button } from "../ui/button";
 import { Link, Route, useLocation, useNavigate, useRoutes } from "react-router-dom";
+import { useNavigationBar } from "./hooks/NavigationBar.hook";
 
 export const NavigationBar: React.FC = () => {
+  const { isUserLoggedIn } = useNavigationBar();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -67,11 +69,13 @@ export const NavigationBar: React.FC = () => {
         >
           Our Achievements
         </Text>
-        <Link to={location.pathname === "/login" ? "/signup" : "/login"}>
-          <Button fontWeight={"bold"} colorPalette={"purple"} display={{ base: "none", sm: "none", md: "block" }}>
-            {location.pathname === "/login" ? "Sign Up" : "Sign In"}
-          </Button>
-        </Link>
+        {isUserLoggedIn !== true && (
+          <Link to={location.pathname === "/login" ? "/signup" : "/login"}>
+            <Button fontWeight={"bold"} colorPalette={"purple"} display={{ base: "none", sm: "none", md: "block" }}>
+              {location.pathname === "/login" ? "Sign Up" : "Sign In"}
+            </Button>
+          </Link>
+        )}
       </Flex>
     </Flex>
   );

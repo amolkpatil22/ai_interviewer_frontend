@@ -8,6 +8,7 @@ import { showAlert } from "../../../Redux/AlertSlice/AlertSlice";
 import { useState } from "react";
 import { createToaster } from "@chakra-ui/react";
 import { toaster } from "../../../Components/ui/toaster";
+import { LocalStorageKeys, setItemToLocalStorage } from "../../../Common/Utils/ManageLocalStorage";
 
 export const useLoginModule = () => {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ export const useLoginModule = () => {
     const response = await userLogin(data.email, data.password);
     if (response.status && response.data) {
       dispatch(saveUser(response.data));
+      setItemToLocalStorage(LocalStorageKeys.isLoggedIn, true);
       toaster.create({
         type: "success",
         title: "Login Success",
