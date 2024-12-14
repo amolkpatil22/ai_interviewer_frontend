@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { LoginModule } from "../Screens/LoginModule/LoginModule";
 import { SignUpModule } from "../Screens/SignUpModule/SignUpModule";
 

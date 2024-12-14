@@ -4,9 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { userLogin } from "../https/UserLogin.http";
 import { useDispatch } from "react-redux";
 import { saveUser } from "../../../Redux/UserSlice/UserSlice";
-import { showAlert } from "../../../Redux/AlertSlice/AlertSlice";
 import { useState } from "react";
-import { createToaster } from "@chakra-ui/react";
 import { toaster } from "../../../Components/ui/toaster";
 import { LocalStorageKeys, setItemToLocalStorage } from "../../../Common/Utils/ManageLocalStorage";
 
@@ -17,7 +15,6 @@ export const useLoginModule = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<FormValues>();
 

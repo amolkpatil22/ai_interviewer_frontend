@@ -6,7 +6,7 @@ export const useNavigationBar = () => {
 
   useEffect(() => {
     setIsUserLoggedIn(getItemFromLocalStorage(LocalStorageKeys.isLoggedIn));
-  });
+  }, [getItemFromLocalStorage(LocalStorageKeys.isLoggedIn)]);
 
   return {
     isUserLoggedIn,

@@ -1,4 +1,4 @@
-import axios, { Axios, AxiosError } from "axios";
+import axios from "axios";
 import { userLoginHttp } from "../../../Common/AxiosInterceptor/Auth/Auth.https";
 import { UserLoginResponse } from "../interfaces/LoginHttp.interface";
 

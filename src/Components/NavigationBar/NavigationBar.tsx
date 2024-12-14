@@ -1,7 +1,7 @@
-import { Box, Flex, Icon, Image, Text } from "@chakra-ui/react";
+import { Flex, Image, Text } from "@chakra-ui/react";
 import React from "react";
 import { Button } from "../ui/button";
-import { Link, Route, useLocation, useNavigate, useRoutes } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useNavigationBar } from "./hooks/NavigationBar.hook";
 
 export const NavigationBar: React.FC = () => {
