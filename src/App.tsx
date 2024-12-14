@@ -3,7 +3,7 @@ import "./App.css";
 import { NavigationRouter } from "./NavigationRouter/NavigationRouter";
 import { Provider } from "./Components/ui/provider";
 import { Provider as ReduxProvider } from "react-redux";
-import { NavigationBar } from "./Components/NavigationBar/NavigationBar";
+import { NavigationBar } from "./Screens/NavigationBarModule/NavigationBarModule";
 import { persistor, store } from "./Redux/Store";
 import { PersistGate } from "redux-persist/integration/react";
 import { Toaster } from "./Components/ui/toaster";

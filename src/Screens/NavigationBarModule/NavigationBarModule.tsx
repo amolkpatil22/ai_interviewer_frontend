@@ -1,6 +1,6 @@
 import { Flex, Image, Text } from "@chakra-ui/react";
 import React from "react";
-import { Button } from "../ui/button";
+import { Button } from "../../Components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useNavigationBar } from "./hooks/NavigationBar.hook";
 
@@ -38,7 +38,7 @@ export const NavigationBar: React.FC = () => {
       <Flex height={"100%"} alignItems={"center"} flex={1} gap={"5%"} justifyContent={"right"}>
         <Text
           cursor={"pointer"}
-          _hover={{ color: "purple" }}
+          _hover={{ color: "#9333E9" }}
           transition="all 0.4s ease-in-out"
           display={{ base: "none", sm: "none", md: "block" }}
           fontWeight={"bold"}
@@ -49,18 +49,19 @@ export const NavigationBar: React.FC = () => {
         </Text>
         <Text
           cursor={"pointer"}
-          _hover={{ color: "purple" }}
+          _hover={{ color: "#9333E9" }}
           transition="all 0.4s ease-in-out"
           display={{ base: "none", sm: "none", md: "block" }}
           fontWeight={"bold"}
           color={"#0fa4d3"}
           flexShrink={0}
+          onClick={() => navigate("/analysis")}
         >
           About Us
         </Text>
         <Text
           cursor={"pointer"}
-          _hover={{ color: "purple" }}
+          _hover={{ color: "#9333E9" }}
           transition="all 0.4s ease-in-out"
           display={{ base: "none", sm: "none", md: "block" }}
           fontWeight={"bold"}
