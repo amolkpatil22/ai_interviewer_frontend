@@ -6,8 +6,8 @@ import { useDispatch } from "react-redux";
 import { saveUser } from "../../../Redux/UserSlice/UserSlice";
 import { showAlert } from "../../../Redux/AlertSlice/AlertSlice";
 import { useState } from "react";
-import { toaster } from "../../../Components/ui/toaster";
 import { createToaster } from "@chakra-ui/react";
+import { toaster } from "../../../Components/ui/toaster";
 
 export const useLoginModule = () => {
   const dispatch = useDispatch();
@@ -24,13 +24,14 @@ export const useLoginModule = () => {
     setLoginLoading(true);
     const response = await userLogin(data.email, data.password);
     if (response.status && response.data) {
-      console.log(response);
       dispatch(saveUser(response.data));
       toaster.create({
         type: "success",
         title: "Login Success",
+        description: "User Logged in Successfully",
         duration: 3000,
       });
+      navigate("/");
     } else {
       toaster.create({
         type: "error",
