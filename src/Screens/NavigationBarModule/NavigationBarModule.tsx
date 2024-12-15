@@ -74,7 +74,7 @@ export const NavigationBar: React.FC = () => {
         </Text>
         {isUserLoggedIn !== true && (
           <Link to={location.pathname === "/login" ? "/signup" : "/login"}>
-            <Button fontWeight={"bold"} colorPalette={"purple"} display={{ base: "none", sm: "none", md: "block" }}>
+            <Button fontWeight={"bold"} colorPalette={"purple"} >
               {location.pathname === "/login" ? "Sign Up" : "Sign In"}
             </Button>
           </Link>
