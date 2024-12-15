@@ -1,9 +1,8 @@
-import { Box, Flex, For, Grid, Heading, HStack, Table, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import React from "react";
 import { Button } from "../../Components/ui/button";
 import { ProgressBar, ProgressRoot } from "../../Components/ui/progress";
 import { useAnalysisModule } from "./hooks/AnalysisModule.hook";
-import { ProgressCircleRing, ProgressCircleRoot, ProgressCircleValueText } from "../../Components/ui/progress-circle";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 

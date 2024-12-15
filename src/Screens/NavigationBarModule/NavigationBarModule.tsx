@@ -11,6 +11,7 @@ export const NavigationBar: React.FC = () => {
 
   return (
     <Flex
+      display={location.pathname === "/interview" ? "none" : undefined}
       flex={1}
       justifyContent={"space-between"}
       paddingLeft={"5%"}
@@ -44,6 +45,7 @@ export const NavigationBar: React.FC = () => {
           fontWeight={"bold"}
           color={"#0fa4d3"}
           flexShrink={0}
+          onClick={() => navigate("/interview")}
         >
           How do we Work
         </Text>
