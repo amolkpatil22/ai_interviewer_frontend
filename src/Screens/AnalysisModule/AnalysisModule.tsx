@@ -1,4 +1,4 @@
-import { Box, Flex, For, Grid, HStack, Text } from "@chakra-ui/react";
+import { Box, Flex, For, Grid, Heading, HStack, Table, Text } from "@chakra-ui/react";
 import React from "react";
 import { Button } from "../../Components/ui/button";
 import { ProgressBar, ProgressRoot } from "../../Components/ui/progress";
@@ -48,7 +48,7 @@ export const AnalysisModule: React.FC = () => {
             </Flex>
             <Button colorPalette={"purple"}>Download Report</Button>
           </Flex>
-          <Flex flexDir={"column"} mt={"20px"} textAlign={"center"} ml={"5%"} mr={"5%"} alignItems={"center"}>
+          <Flex flexDir={"column"} mt={"30px"} textAlign={"center"} ml={"5%"} mr={"5%"} alignItems={"center"}>
             <Text fontWeight={"bold"} color={"#9333E9"}>
               Your Overall Score: {score}
             </Text>
@@ -199,6 +199,104 @@ export const AnalysisModule: React.FC = () => {
               </Box>
             </Flex>
           </Flex>
+          <Box ml={"5%"} mr={"5%"} flex={1} mt={"40px"}>
+            <Flex justifyContent={"center"} color={"purple"}>
+              <Heading>Detailed analysis of your answers</Heading>
+            </Flex>
+            {Array.from({ length: 12 }).map((_, ind) => {
+              return (
+                <Box key={ind} mt={"30px"}>
+                  <Flex gap={"10px"}>
+                    <Text fontWeight={"bold"}>Q.{ind + 1}</Text>
+                    <Text fontWeight={"bold"}>
+                      What will be the output of the following code? let a = [1, 2]; let b = a; b.push(3);
+                      console.log(a);
+                    </Text>
+                  </Flex>
+                  <Box ml={"32px"} mt={"20px"}>
+                    <Text color={"gray"} fontWeight={"bold"}>
+                      Candidate Answer:
+                    </Text>
+                    <Text>
+                      React Hooks are functions that allow functional components to manage state and side effects. The
+                      primary difference between class components and functional components with hooks is that
+                      functional components use hooks like 'useState' and 'useEffect' to handle state and lifecycle
+                      events without the need for a class. Hooks improve maintainability by reducing boilerplate code
+                      and making the codebase easier to read.
+                    </Text>
+                  </Box>
+                  <Box ml={"32px"} mt={"20px"}>
+                    <Text color={"gray"} fontWeight={"bold"}>
+                      What Went Well:
+                    </Text>
+                    <Text>
+                      React Hooks are functions that allow functional components to manage state and side effects. The
+                      primary difference between class components and functional components with hooks is that
+                      functional components use hooks like 'useState' and 'useEffect' to handle state and lifecycle
+                      events without the need for a class. Hooks improve maintainability by reducing boilerplate code
+                      and making the codebase easier to read.
+                    </Text>
+                  </Box>
+                  <Box ml={"32px"} mt={"20px"}>
+                    <Text color={"gray"} fontWeight={"bold"}>
+                      What Can Be Improved:
+                    </Text>
+                    <Text>
+                      React Hooks are functions that allow functional components to manage state and side effects. The
+                      primary difference between class components and functional components with hooks is that
+                      functional components use hooks like 'useState' and 'useEffect' to handle state and lifecycle
+                      events without the need for a class. Hooks improve maintainability by reducing boilerplate code
+                      and making the codebase easier to read.
+                    </Text>
+                  </Box>
+                  <Box ml={"32px"} mt={"20px"} fontWeight={"bold"}>
+                    <Text color={"#9333E9"}>Scores:</Text>
+                    <Flex gap={"5px"} alignItems={"center"} justifyContent={"left"}>
+                      <Text fontWeight={"normal"} color={"#0fa4d3"}>
+                        Understanding of the question:
+                      </Text>
+                      <Text fontWeight={"normal"} color={"#9333E9"}>
+                        8/10
+                      </Text>
+                    </Flex>
+                    <Flex gap={"5px"} alignItems={"center"} justifyContent={"left"}>
+                      <Text fontWeight={"normal"} color={"#0fa4d3"}>
+                        Accuracy of the answer:
+                      </Text>
+                      <Text fontWeight={"normal"} color={"#9333E9"}>
+                        8/10
+                      </Text>
+                    </Flex>
+                    <Flex gap={"5px"} alignItems={"center"} justifyContent={"left"}>
+                      <Text fontWeight={"normal"} color={"#0fa4d3"}>
+                        Subject knowledge:
+                      </Text>
+                      <Text fontWeight={"normal"} color={"#9333E9"}>
+                        8/10
+                      </Text>
+                    </Flex>
+                    <Flex gap={"5px"} alignItems={"center"} justifyContent={"left"}>
+                      <Text fontWeight={"normal"} color={"#0fa4d3"}>
+                        Code/Answer Quality:
+                      </Text>
+                      <Text fontWeight={"normal"} color={"#9333E9"}>
+                        8/10
+                      </Text>
+                    </Flex>
+                    <Flex gap={"5px"} alignItems={"center"} justifyContent={"left"}>
+                      <Text fontWeight={"normal"} color={"#0fa4d3"}>
+                        Overall:
+                      </Text>
+                      <Text fontWeight={"normal"} color={"#9333E9"}>
+                        8/10
+                      </Text>
+                    </Flex>
+                  </Box>
+                </Box>
+              );
+            })}
+          </Box>
+          <Box ml={"5%"} mr={"5%"} mt={"30px"}></Box>
         </Box>
       )}
     </Box>
