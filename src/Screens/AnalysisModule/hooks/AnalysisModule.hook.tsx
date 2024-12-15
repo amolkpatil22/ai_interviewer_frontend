@@ -2,7 +2,7 @@ import { useState } from "react";
 
 export const useAnalysisModule = () => {
   const [isResultAvailable, setIsResultAvailable] = useState(true);
-  const [score, setScore] = useState(10);
+  const [score, setScore] = useState(5);
 
   function getScoreColor(score: number): string {
     if (score <= 2) {
