@@ -1,16 +1,16 @@
-export enum LocalStorageKeys {
-  isLoggedIn = "isLoggedIn",
+export interface LocalStorageKeys {
+  isLoggedIn: boolean;
 }
 
-export const setItemToLocalStorage = (key: LocalStorageKeys, value: string | boolean | number) => {
+export const setItemToLocalStorage = <T extends keyof LocalStorageKeys>(key: T, value: LocalStorageKeys[T]) => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 
-export const getItemFromLocalStorage = (key: LocalStorageKeys) => {
+export const getItemFromLocalStorage = <T extends keyof LocalStorageKeys>(key: T): LocalStorageKeys[T] | null => {
   const value = localStorage.getItem(key);
   return value ? JSON.parse(value) : null;
 };
 
-export const removeItemFromLocalStorage = (key: LocalStorageKeys) => {
+export const removeItemFromLocalStorage = (key: keyof LocalStorageKeys) => {
   localStorage.removeItem(key);
 };

@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { FormValues } from "../interfaces/LoginModule.interface";
 import { useNavigate } from "react-router-dom";
-import { userLogin } from "../https/UserLogin.http";
+import { userLogin } from "../HttpsAction/UserLogin.http";
 import { useDispatch } from "react-redux";
 import { saveUser } from "../../../Redux/UserSlice/UserSlice";
 import { useState } from "react";
@@ -23,7 +23,7 @@ export const useLoginModule = () => {
     const response = await userLogin(data.email, data.password);
     if (response.status && response.data) {
       dispatch(saveUser(response.data));
-      setItemToLocalStorage(LocalStorageKeys.isLoggedIn, true);
+      setItemToLocalStorage("isLoggedIn", true);
       toaster.create({
         type: "success",
         title: "Login Success",

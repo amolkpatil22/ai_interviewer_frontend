@@ -9,16 +9,11 @@ import {
   SelectValueText,
 } from "../../Components/ui/select";
 import { Button } from "../../Components/ui/button";
+import { useLandingModule } from "./Hooks/LandingModule.hook";
 
 export const LandingModule: React.FC = () => {
-  const frameworks = createListCollection({
-    items: [
-      { label: "React.js", value: "react" },
-      { label: "Vue.js", value: "vue" },
-      { label: "Angular", value: "angular" },
-      { label: "Svelte", value: "svelte" },
-    ],
-  });
+  const { frameworks, getCategories, categories } = useLandingModule();
+
   return (
     <Box flex={1} mr={"5%"} ml={"5%"}>
       <Flex
@@ -53,21 +48,23 @@ export const LandingModule: React.FC = () => {
             <Heading color={"purple"} fontSize={"3xl"} fontFamily={"mono"} flexShrink={1} flexWrap={"wrap"}>
               Are You Ready<Text mt={"10px"}>For The Interview ?</Text>
             </Heading>
-            <SelectRoot mt={"20px"} collection={frameworks}>
+
+            <SelectRoot mt={"20px"}  collection={categories} onClick={getCategories}>
               <SelectLabel color={"#0fa4d3"} fontSize={"md"} fontWeight={"bold"}>
-                Select Field
+                Select Category
               </SelectLabel>
               <SelectTrigger>
                 <SelectValueText placeholder="Select Field" />
               </SelectTrigger>
               <SelectContent>
-                {frameworks.items.map((movie) => (
-                  <SelectItem item={movie} key={movie.value}>
-                    {movie.label}
+                {categories.items.map((item) => (
+                  <SelectItem item={item} key={item._id}>
+                    {item.name}
                   </SelectItem>
                 ))}
               </SelectContent>
             </SelectRoot>
+
             <SelectRoot mt={"20px"} collection={frameworks}>
               <SelectLabel color={"#0fa4d3"} fontSize={"md"} fontWeight={"bold"}>
                 Select Tech
