@@ -12,7 +12,9 @@ export const useInterviewModule = () => {
       });
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
+        videoRef.current.play();
       }
+
       setHasPermission(true);
     } catch (err: any) {
       setHasPermission(false);

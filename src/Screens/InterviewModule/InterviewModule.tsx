@@ -57,9 +57,9 @@ export const InterviewModule: React.FC = () => {
                 style={{ borderRadius: "15px" }}
                 width={"100%"}
                 ref={videoRef}
-                autoPlay
+                autoPlay={true}
                 muted
-                playsInline
+                playsInline={true}
               ></video>
             </Box>
           </Flex>
