@@ -6,9 +6,10 @@ import { useInterviewModule } from "./hooks/Interview.hook";
 import { Button } from "../../Components/ui/button";
 import "./Styles/Interview.style.css";
 import MonacoEditor from "@monaco-editor/react";
+import Webcam from "react-webcam";
 
 export const InterviewModule: React.FC = () => {
-  const { hasPermission, requestMediaPermission, videoRef } = useInterviewModule();
+  const { hasPermission } = useInterviewModule();
 
   return (
     <Box backgroundColor={"#F5F5F5"} minH={"100vh"} padding={"1%"}>
@@ -52,15 +53,7 @@ export const InterviewModule: React.FC = () => {
               maxWidth={"350px"}
               boxShadow={"rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"}
             >
-              <video
-                height={"100%"}
-                style={{ borderRadius: "15px" }}
-                width={"100%"}
-                ref={videoRef}
-                autoPlay={true}
-                muted
-                playsInline={true}
-              ></video>
+              <Webcam style={{ borderRadius: "20px" }} audio={false} height={"100%"} width={"100%"} />
             </Box>
           </Flex>
           <Text textAlign={"center"} ml={"10%"} mr={"10%"}>
