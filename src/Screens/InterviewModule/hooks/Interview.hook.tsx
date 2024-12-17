@@ -10,13 +10,17 @@ export const useInterviewModule = () => {
         video: true,
         audio: true,
       });
+      console.log("🚀 ~ requestMediaPermission ~ stream:", stream)
       if (videoRef.current) {
+       
         videoRef.current.srcObject = stream;
         videoRef.current.play();
       }
-
+      console.log("🚀 ~ requestMediaPermission ~ videoRef:", videoRef)
       setHasPermission(true);
     } catch (err: any) {
+      console.log("🚀 ~ requestMediaPermission ~ err:", err);
+
       setHasPermission(false);
     }
   };
