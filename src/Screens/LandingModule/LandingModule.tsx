@@ -12,7 +12,18 @@ import { Button } from "../../Components/ui/button";
 import { useLandingModule } from "./Hooks/LandingModule.hook";
 
 export const LandingModule: React.FC = () => {
-  const { frameworks, getCategories, categories } = useLandingModule();
+  const {
+    isStartInterviewLoading,
+    startInterview,
+    handleDifficulty,
+    difficultyList,
+    getSubCategory,
+    handleSelectedSubCategory,
+    subCategoriesList,
+    handleSelectedCategory,
+    getCategories,
+    categories,
+  } = useLandingModule();
 
   return (
     <Box flex={1} mr={"5%"} ml={"5%"}>
@@ -49,11 +60,11 @@ export const LandingModule: React.FC = () => {
               Are You Ready<Text mt={"10px"}>For The Interview ?</Text>
             </Heading>
 
-            <SelectRoot mt={"20px"}  collection={categories} onClick={getCategories}>
+            <SelectRoot mt={"20px"} collection={categories} onValueChange={handleSelectedCategory}>
               <SelectLabel color={"#0fa4d3"} fontSize={"md"} fontWeight={"bold"}>
-                Select Category
+                Category
               </SelectLabel>
-              <SelectTrigger>
+              <SelectTrigger onClick={getCategories}>
                 <SelectValueText placeholder="Select Field" />
               </SelectTrigger>
               <SelectContent>
@@ -65,22 +76,45 @@ export const LandingModule: React.FC = () => {
               </SelectContent>
             </SelectRoot>
 
-            <SelectRoot mt={"20px"} collection={frameworks}>
+            <SelectRoot mt={"20px"} collection={subCategoriesList} onValueChange={handleSelectedSubCategory}>
               <SelectLabel color={"#0fa4d3"} fontSize={"md"} fontWeight={"bold"}>
-                Select Tech
+                Sub-Category
               </SelectLabel>
-              <SelectTrigger>
-                <SelectValueText placeholder="Select Tech" />
+              <SelectTrigger onClick={getSubCategory}>
+                <SelectValueText placeholder="Select Sub-Category" />
               </SelectTrigger>
               <SelectContent>
-                {frameworks.items.map((movie) => (
-                  <SelectItem item={movie} key={movie.value}>
-                    {movie.label}
+                {subCategoriesList.items.map((item) => (
+                  <SelectItem item={item} key={item._id}>
+                    {item.name}
                   </SelectItem>
                 ))}
               </SelectContent>
             </SelectRoot>
-            <Button mt={"10%"} maxW={"fit-content"} colorPalette={"purple"}>
+
+            <SelectRoot mt={"20px"} collection={difficultyList} onValueChange={handleDifficulty}>
+              <SelectLabel color={"#0fa4d3"} fontSize={"md"} fontWeight={"bold"}>
+                Difficulty
+              </SelectLabel>
+              <SelectTrigger>
+                <SelectValueText placeholder="Select Difficulty" />
+              </SelectTrigger>
+              <SelectContent>
+                {difficultyList.items.map((item) => (
+                  <SelectItem item={item} key={item.value}>
+                    {item.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </SelectRoot>
+            <Button
+              onClick={startInterview}
+              loadingText={"Start Interview"}
+              mt={"10%"}
+              loading={isStartInterviewLoading}
+              maxW={"fit-content"}
+              colorPalette={"purple"}
+            >
               Start Interview
             </Button>
           </Flex>

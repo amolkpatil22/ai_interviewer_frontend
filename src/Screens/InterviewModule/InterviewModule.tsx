@@ -45,16 +45,16 @@ export const InterviewModule: React.FC = () => {
                 Listening...
               </Text>
             </Flex>
-            <Box
-              display={{ base: "none", sm: "none", md: "block" }}
-              h={"fit-content"}
-              padding={"5px"}
-              borderRadius={"20px"}
-              maxWidth={"350px"}
-              boxShadow={"rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"}
-            >
-              <Webcam style={{ borderRadius: "20px" }} audio={false} height={"100%"} width={"100%"} />
-            </Box>
+                    <Box
+                    display={{ base: "none", sm: "none", md: "block" }}
+                    h={"fit-content"}
+                    padding={"5px"}
+                    borderRadius={"20px"}
+                    maxWidth={"350px"}
+                    boxShadow={"rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"}
+                    >
+                    <Webcam style={{ borderRadius: "20px" }} audio={false} height={"100%"} width={"100%"} />
+                    </Box>
           </Flex>
           <Text textAlign={"center"} ml={"10%"} mr={"10%"}>
             Q. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores enim eligendi eius sequi sit pariatur

@@ -1,5 +1,6 @@
 // src/api/axiosInstance.js
 import axios from "axios";
+import { removeItemFromLocalStorage } from "../Utils/ManageLocalStorage";
 
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL, // Set your base API URL
@@ -15,8 +16,8 @@ axiosInstance.interceptors.response.use(
   (error) => {
     // Handle errors globally
     if (error.response?.status === 401) {
-      // Redirect to login or refresh token logic
-      console.error("Unauthorized access");
+      removeItemFromLocalStorage("isLoggedIn");
+      // window.location.href = "/login";
     }
     return Promise.reject(error);
   }

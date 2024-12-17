@@ -4,10 +4,12 @@ import storage from "redux-persist/lib/storage";
 import { combineReducers } from "redux";
 import userSlice from "./UserSlice/UserSlice";
 import alertSlice from "./AlertSlice/AlertSlice";
+import questionSlice from "./QuestionsSlice/QuestionsSlice";
 
 const rootReducer = combineReducers({
   user: userSlice,
-  alert:alertSlice,
+  alert: alertSlice,
+  questions: questionSlice,
 });
 
 const persistConfig = {
