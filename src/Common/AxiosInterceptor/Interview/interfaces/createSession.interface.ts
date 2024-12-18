@@ -18,7 +18,7 @@ export interface CreateSessionsHttpsSessionData {
 }
 
 export interface CreateSessionHttpsData {
-  sessionData: CreateSessionHttpsData;
+  sessionData: CreateSessionsHttpsSessionData;
   questions: Question[];
 }
 

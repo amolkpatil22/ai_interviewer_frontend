@@ -27,7 +27,7 @@ export const NavigationRouter: React.FC = () => {
             <InterviewModule />
           </AuthWrapper>
         }
-        path="/interview"
+        path="/interview/:session_id/:question_id?"
       />
       <Route path="/*" element={<Navigate to="/" replace />} />
     </Routes>

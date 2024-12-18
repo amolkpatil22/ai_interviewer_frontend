@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createSession, fetchSubCategory, getAllCategories } from "../HttpsAction/LandingModule.https";
 import { getAllCategoriesHttpsData } from "../../../Common/AxiosInterceptor/Interview/interfaces/getAllCategories.interfce";
 import { toaster } from "../../../Components/ui/toaster";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useNavigation, useParams, useSearchParams } from "react-router-dom";
 import { getSubCategoriesByCategoryIdHttpsData } from "../../../Common/AxiosInterceptor/Interview/interfaces/getSubCategoriesByCategoryId.interface";
 import { CreateSessionHttpsRequest } from "../../../Common/AxiosInterceptor/Interview/interfaces/createSession.interface";
 import { useDispatch } from "react-redux";
@@ -16,6 +16,7 @@ export const useLandingModule = () => {
   const [selectedSubCategory, setSelectedSubCategory] = useState<{ _id: string; name: string } | undefined>();
   const [difficulty, setDifficulty] = useState("");
   const [isStartInterviewLoading, setIsStartInterviewLoading] = useState(false);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const difficultyList = createListCollection({
@@ -126,9 +127,10 @@ export const useLandingModule = () => {
         tech: selectedSubCategory.name,
       };
       const response = await createSession(payload);
-      console.log("🚀 ~ startInterview ~ response:", response);
+
       if (response.status && response.data) {
         dispatch(setQuestions(response.data.questions));
+        navigate(`/interview/${response.data.sessionData._id}`);
       } else {
         toaster.create({
           type: "error",

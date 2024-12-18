@@ -7,9 +7,11 @@ import { Button } from "../../Components/ui/button";
 import "./Styles/Interview.style.css";
 import MonacoEditor from "@monaco-editor/react";
 import Webcam from "react-webcam";
+import { formatTime } from "../../Common/Utils/FormatTime";
 
 export const InterviewModule: React.FC = () => {
-  const { hasPermission } = useInterviewModule();
+  const { currentQuestionIndex, isSpeaking, hasPermission, timeLeft, question_id, startInterview, questions } =
+    useInterviewModule();
 
   return (
     <Box backgroundColor={"#F5F5F5"} minH={"100vh"} padding={"1%"}>
@@ -29,7 +31,7 @@ export const InterviewModule: React.FC = () => {
       </Show>
 
       <Show when={hasPermission === true}>
-        <Text fontWeight={"bold"}>Timer: 00:00:00</Text>
+        <Text fontWeight={"bold"}>{`TimeLeft: ${formatTime(timeLeft)}`}</Text>
         <Flex height={"100%"} flexDir={"column"} justifyContent={"space-between"}>
           <Flex flexShrink={1} flexWrap={"wrap"} gap={"5%"} flex={1} justifyContent={"center"} alignItems={"center"}>
             <Flex flexDir={"column"} alignItems={"center"} flexShrink={1}>
@@ -45,24 +47,30 @@ export const InterviewModule: React.FC = () => {
                 Listening...
               </Text>
             </Flex>
-                    <Box
-                    display={{ base: "none", sm: "none", md: "block" }}
-                    h={"fit-content"}
-                    padding={"5px"}
-                    borderRadius={"20px"}
-                    maxWidth={"350px"}
-                    boxShadow={"rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"}
-                    >
-                    <Webcam style={{ borderRadius: "20px" }} audio={false} height={"100%"} width={"100%"} />
-                    </Box>
+            <Box
+              display={{ base: "none", sm: "none", md: "block" }}
+              h={"fit-content"}
+              padding={"5px"}
+              borderRadius={"20px"}
+              maxWidth={"350px"}
+              boxShadow={"rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"}
+            >
+              <Webcam style={{ borderRadius: "20px" }} audio={false} height={"100%"} width={"100%"} />
+            </Box>
           </Flex>
-          <Text textAlign={"center"} ml={"10%"} mr={"10%"}>
-            Q. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores enim eligendi eius sequi sit pariatur
-            reiciendis aliquam, quasi veniam iste vero explicabo necessitatibus voluptatem, quaerat vitae. Repudiandae
-            praesentium cum sequi.
-          </Text>
+          {currentQuestionIndex !== null && (
+            <Text textAlign={"center"} ml={"10%"} mr={"10%"}>
+              Q. {questions[currentQuestionIndex].question}
+            </Text>
+          )}
           {/* <MonacoEditor saveViewState={true} height="400px" defaultLanguage="" defaultValue="// write your code" /> */}
           <Flex mt={"10%"} flexWrap={"wrap"} gap={"20px"} justifyContent={"center"}>
+            {!isSpeaking && !question_id && (
+              <Button onClick={startInterview} colorPalette={"black"} minW={"120px"}>
+                Start Interview
+              </Button>
+            )}
+            {/*  */}
             <Button colorPalette={"black"} minW={"120px"}>
               Skip
             </Button>
@@ -71,6 +79,7 @@ export const InterviewModule: React.FC = () => {
             </Button>
           </Flex>
         </Flex>
+        {/* jhi */}
       </Show>
     </Box>
   );

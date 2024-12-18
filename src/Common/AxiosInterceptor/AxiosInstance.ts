@@ -17,7 +17,7 @@ axiosInstance.interceptors.response.use(
     // Handle errors globally
     if (error.response?.status === 401) {
       removeItemFromLocalStorage("isLoggedIn");
-      // window.location.href = "/login";
+      window.location.href = "/login";
     }
     return Promise.reject(error);
   }
