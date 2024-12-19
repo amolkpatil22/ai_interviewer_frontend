@@ -1,5 +1,5 @@
 import { Box, Flex, Heading, Image, Show, Text } from "@chakra-ui/react";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { ReactMediaRecorder } from "react-media-recorder";
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import { useInterviewModule } from "./hooks/Interview.hook";
@@ -8,10 +8,30 @@ import "./Styles/Interview.style.css";
 import MonacoEditor from "@monaco-editor/react";
 import Webcam from "react-webcam";
 import { formatTime } from "../../Common/Utils/FormatTime";
+import {
+  DialogActionTrigger,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
+  DialogTrigger,
+} from "../../Components/ui/dialog";
 
 export const InterviewModule: React.FC = () => {
-  const { currentQuestionIndex, isSpeaking, hasPermission, timeLeft, question_id, startInterview, questions } =
-    useInterviewModule();
+  const [open, setOpen] = useState(false);
+  const {
+    currentQuestion,
+    currentQuestionIndex,
+    isSpeaking,
+    hasPermission,
+    timeLeft,
+    question_id,
+    startInterview,
+    questions,
+  } = useInterviewModule();
 
   return (
     <Box backgroundColor={"#F5F5F5"} minH={"100vh"} padding={"1%"}>
@@ -58,9 +78,9 @@ export const InterviewModule: React.FC = () => {
               <Webcam style={{ borderRadius: "20px" }} audio={false} height={"100%"} width={"100%"} />
             </Box>
           </Flex>
-          {currentQuestionIndex !== null && (
-            <Text textAlign={"center"} ml={"10%"} mr={"10%"}>
-              Q. {questions[currentQuestionIndex].question}
+          {currentQuestion && (
+            <Text fontWeight={"bold"} textAlign={"center"} ml={"10%"} mr={"10%"}>
+              Q. {currentQuestion.question}
             </Text>
           )}
           {/* <MonacoEditor saveViewState={true} height="400px" defaultLanguage="" defaultValue="// write your code" /> */}
@@ -70,7 +90,9 @@ export const InterviewModule: React.FC = () => {
                 Start Interview
               </Button>
             )}
-            {/*  */}
+            <Button colorPalette={"purple"} onClick={() => setOpen((prev) => !prev)}>
+              Code Writer
+            </Button>
             <Button colorPalette={"black"} minW={"120px"}>
               Skip
             </Button>
@@ -81,6 +103,36 @@ export const InterviewModule: React.FC = () => {
         </Flex>
         {/* jhi */}
       </Show>
+
+      <DialogRoot lazyMount open={open} size={"cover"} onOpenChange={(e) => setOpen(e.open)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Q.</DialogTitle>
+            <Text>
+              {currentQuestion?.question.split("\n").map((q) => (
+                <Text>{q}</Text>
+              ))}
+            </Text>
+          </DialogHeader>
+          <DialogBody padding={0}>
+            <Box flex={1} width={"100%"} height={"100%"}>
+              <MonacoEditor
+                value={""}
+                options={{ wordWrap: "on", wordBasedSuggestions: "allDocuments" }}
+                onChange={(val) => console.log("val", val?.toString())}
+                loading={true}
+              ></MonacoEditor>
+            </Box>
+          </DialogBody>
+          <DialogFooter>
+            <DialogActionTrigger asChild>
+              <Button variant="outline">Minimize</Button>
+            </DialogActionTrigger>
+            <Button>Submit</Button>
+          </DialogFooter>
+          <DialogCloseTrigger />
+        </DialogContent>
+      </DialogRoot>
     </Box>
   );
 };

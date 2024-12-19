@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../../Redux/Store";
 import { utteranceMessage } from "../../../Common/Utterance/Utterance";
 import { speakText } from "../../../Common/Utils/SpeakText";
+import { Question } from "../../../Redux/QuestionsSlice/QuestionsSlice";
 
 export const useInterviewModule = () => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -12,37 +13,72 @@ export const useInterviewModule = () => {
   const navigate = useNavigate();
   const [timeLeft, setTimeLeft] = useState<number>(3600);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number | null>(null);
+  const [currentQuestion, setCurrentQuestion] = useState<Question>();
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   useEffect(() => {
-    setIsSpeaking(true);
-    speakText({ text: utteranceMessage.welcome, onEnd: () => setIsSpeaking(false) });
+    requestMediaPermission();
   }, []);
 
   useEffect(() => {
-    console.log("change");
-    handlePageStart();
+    if (hasPermission && !question_id) {
+      const timer = setTimeout(() => {
+        handleInitialRender();
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [hasPermission]);
+
+  useEffect(() => {
+    setCurrentQuestionAfterQuestionIdChange();
   }, [question_id]);
+
+  useEffect(() => {
+    handleSpeakingAfterQuestionChange();
+  }, [currentQuestion]);
+
+  const handleInitialRender = () => {
+    onSpeakingHandler();
+    speakText({ text: utteranceMessage.welcome, onEnd: onSpeakingHandler });
+  };
+
+  const setCurrentQuestionAfterQuestionIdChange = () => {
+    if (question_id) {
+      const questionIndex = questions.findIndex((item) => item._id === question_id);
+      onSpeakingHandler();
+      if (questionIndex !== -1) {
+        setCurrentQuestion(questions[questionIndex]);
+        setCurrentQuestionIndex(questionIndex);
+        speakText({ text: utteranceMessage.hereIsTheQuestion, onEnd: onSpeakingHandler });
+      } else {
+        speakText({ text: utteranceMessage.invalidQuestionId, onEnd: onSpeakingHandler });
+      }
+    }
+  };
+
+  const handleSpeakingAfterQuestionChange = () => {
+    if (currentQuestion) {
+      onSpeakingHandler();
+      if (currentQuestion.type === "coding") {
+        speakText({ text: utteranceMessage.codingQuestion, onEnd: () => onSpeakingHandler });
+      } else if (currentQuestion.type === "output") {
+        speakText({ text: `Question. ${currentQuestion?.question}`, onEnd: () => onSpeakingHandler });
+      } else {
+        speakText({ text: `Question. ${currentQuestion?.question}`, onEnd: () => onSpeakingHandler });
+      }
+    }
+  };
+
+  const onSpeakingHandler = () => {
+    setIsSpeaking((prev) => !prev);
+  };
 
   const startInterview = () => {
     navigate(`${questions[0]._id}`);
   };
 
-  const handlePageStart = () => {
-    console.log("question boxx");
-    if (question_id) {
-      const isValidQuestion = questions.findIndex((item) => item._id === question_id);
-      if (isValidQuestion !== -1) {
-        setCurrentQuestionIndex(isValidQuestion);
-        setIsSpeaking(true);
-        speakText({ text: questions[isValidQuestion].question, onEnd: () => setIsSpeaking(false) });
-      } else {
-        speakText({ text: utteranceMessage.invalidQuestionId, onEnd: () => setIsSpeaking(false) });
-      }
-    }
-  };
-  console.log("curetn", currentQuestionIndex);
   //   useEffect(() => {
   //     if (timeLeft === 0) return;
   //     const interval = setInterval(() => {
@@ -66,11 +102,8 @@ export const useInterviewModule = () => {
     }
   };
 
-  useEffect(() => {
-    requestMediaPermission();
-  }, []);
-
   return {
+    currentQuestion,
     currentQuestionIndex,
     questions,
     isSpeaking,

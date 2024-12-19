@@ -8,10 +8,11 @@ export const NavigationBar: React.FC = () => {
   const { isUserLoggedIn } = useNavigationBar();
   const navigate = useNavigate();
   const location = useLocation();
+  const isInterviewPath = /^\/interview\/[^/]+(\/[^/]+)?$/.test(location.pathname);
 
   return (
     <Flex
-      display={location.pathname === "/interview" ? "none" : undefined}
+      display={isInterviewPath ? "none" : undefined}
       flex={1}
       justifyContent={"space-between"}
       paddingLeft={"5%"}
@@ -74,7 +75,7 @@ export const NavigationBar: React.FC = () => {
         </Text>
         {isUserLoggedIn !== true && (
           <Link to={location.pathname === "/login" ? "/signup" : "/login"}>
-            <Button fontWeight={"bold"} colorPalette={"purple"} >
+            <Button fontWeight={"bold"} colorPalette={"purple"}>
               {location.pathname === "/login" ? "Sign Up" : "Sign In"}
             </Button>
           </Link>

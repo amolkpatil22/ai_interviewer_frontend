@@ -6,7 +6,7 @@ export interface Question {
   sub_category_id: string;
   question: string;
   difficulty: string;
-  type: string;
+  type: "coding" | "output" | "theory";
   hint: string;
 }
 
