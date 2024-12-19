@@ -16,6 +16,8 @@ export const useInterviewModule = () => {
   const [currentQuestion, setCurrentQuestion] = useState<Question>();
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isCodeWriterOpen, setIsCodeWriterOpen] = useState(false);
+  const [candidateAnswer, setCandidateAnswer] = useState("");
 
   useEffect(() => {
     requestMediaPermission();
@@ -79,6 +81,15 @@ export const useInterviewModule = () => {
     navigate(`${questions[0]._id}`);
   };
 
+  const submitAnswer = () => {
+    setIsCodeWriterOpen(false);
+    setCandidateAnswer("");
+    if (currentQuestionIndex !== null) {
+      const nextQuestionId = questions[currentQuestionIndex + 1]._id;
+      navigate(`/interview/${session_id}/${nextQuestionId}`);
+    }
+  };
+
   //   useEffect(() => {
   //     if (timeLeft === 0) return;
   //     const interval = setInterval(() => {
@@ -103,6 +114,10 @@ export const useInterviewModule = () => {
   };
 
   return {
+    isCodeWriterOpen,
+    setIsCodeWriterOpen,
+    candidateAnswer,
+    setCandidateAnswer,
     currentQuestion,
     currentQuestionIndex,
     questions,
@@ -112,5 +127,6 @@ export const useInterviewModule = () => {
     requestMediaPermission,
     startInterview,
     question_id,
+    submitAnswer,
   };
 };

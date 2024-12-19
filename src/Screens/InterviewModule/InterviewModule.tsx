@@ -21,7 +21,6 @@ import {
 } from "../../Components/ui/dialog";
 
 export const InterviewModule: React.FC = () => {
-  const [open, setOpen] = useState(false);
   const {
     currentQuestion,
     currentQuestionIndex,
@@ -31,6 +30,12 @@ export const InterviewModule: React.FC = () => {
     question_id,
     startInterview,
     questions,
+    candidateAnswer,
+    isCodeWriterOpen,
+    requestMediaPermission,
+    submitAnswer,
+    setCandidateAnswer,
+    setIsCodeWriterOpen,
   } = useInterviewModule();
 
   return (
@@ -90,7 +95,7 @@ export const InterviewModule: React.FC = () => {
                 Start Interview
               </Button>
             )}
-            <Button colorPalette={"purple"} onClick={() => setOpen((prev) => !prev)}>
+            <Button colorPalette={"purple"} onClick={() => setIsCodeWriterOpen((prev) => !prev)}>
               Code Writer
             </Button>
             <Button colorPalette={"black"} minW={"120px"}>
@@ -104,10 +109,15 @@ export const InterviewModule: React.FC = () => {
         {/* jhi */}
       </Show>
 
-      <DialogRoot lazyMount open={open} size={"cover"} onOpenChange={(e) => setOpen(e.open)}>
+      <DialogRoot lazyMount open={isCodeWriterOpen} size={"cover"} onOpenChange={(e) => setIsCodeWriterOpen(e.open)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Q.</DialogTitle>
+            <DialogTitle>
+              Q.
+              {currentQuestion?.type === "coding"
+                ? "Achieve below step through coding"
+                : "Determine the output of the below code"}
+            </DialogTitle>
             <Text>
               {currentQuestion?.question.split("\n").map((q) => (
                 <Text>{q}</Text>
@@ -117,9 +127,9 @@ export const InterviewModule: React.FC = () => {
           <DialogBody padding={0}>
             <Box flex={1} width={"100%"} height={"100%"}>
               <MonacoEditor
-                value={""}
+                value={candidateAnswer}
                 options={{ wordWrap: "on", wordBasedSuggestions: "allDocuments" }}
-                onChange={(val) => console.log("val", val?.toString())}
+                onChange={(val) => setCandidateAnswer(val ? val : "")}
                 loading={true}
               ></MonacoEditor>
             </Box>
@@ -128,7 +138,7 @@ export const InterviewModule: React.FC = () => {
             <DialogActionTrigger asChild>
               <Button variant="outline">Minimize</Button>
             </DialogActionTrigger>
-            <Button>Submit</Button>
+            <Button onClick={submitAnswer}>Submit</Button>
           </DialogFooter>
           <DialogCloseTrigger />
         </DialogContent>
