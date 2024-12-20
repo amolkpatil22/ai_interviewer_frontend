@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { data, useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../../Redux/Store";
 import { utteranceMessage } from "../../../Common/Utterance/Utterance";
 import { speakText } from "../../../Common/Utils/SpeakText";
-import { Question } from "../../../Redux/QuestionsSlice/QuestionsSlice";
+import { Question, QuestionTypes } from "../../../Redux/QuestionsSlice/QuestionsSlice";
+import { useReactMediaRecorder } from "react-media-recorder";
+import { addDataToIndexDb, getDataFromIndexDb, openDatabaseInIndexDb } from "../../../Common/Utils/IndexDb";
+import { Blob } from "buffer";
 
 export const useInterviewModule = () => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -18,8 +21,13 @@ export const useInterviewModule = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isCodeWriterOpen, setIsCodeWriterOpen] = useState(false);
   const [candidateAnswer, setCandidateAnswer] = useState("");
+  const { status, startRecording, stopRecording, mediaBlobUrl } = useReactMediaRecorder({
+    video: true,
+    audio: true,
+  });
 
   useEffect(() => {
+    openDatabaseInIndexDb("smart-hire", 1);
     requestMediaPermission();
   }, []);
 
@@ -38,6 +46,9 @@ export const useInterviewModule = () => {
   }, [question_id]);
 
   useEffect(() => {
+    if (currentQuestion?.type === QuestionTypes.THEORY) {
+      startRecording();
+    }
     handleSpeakingAfterQuestionChange();
   }, [currentQuestion]);
 
@@ -63,9 +74,9 @@ export const useInterviewModule = () => {
   const handleSpeakingAfterQuestionChange = () => {
     if (currentQuestion) {
       onSpeakingHandler();
-      if (currentQuestion.type === "coding") {
+      if (currentQuestion.type === QuestionTypes.CODING) {
         speakText({ text: utteranceMessage.codingQuestion, onEnd: () => onSpeakingHandler });
-      } else if (currentQuestion.type === "output") {
+      } else if (currentQuestion.type === QuestionTypes.OUTPUT) {
         speakText({ text: `Question. ${currentQuestion?.question}`, onEnd: () => onSpeakingHandler });
       } else {
         speakText({ text: `Question. ${currentQuestion?.question}`, onEnd: () => onSpeakingHandler });
@@ -81,8 +92,14 @@ export const useInterviewModule = () => {
     navigate(`${questions[0]._id}`);
   };
 
-  const submitAnswer = () => {
-    setIsCodeWriterOpen(false);
+  const submitAnswer = async () => {
+    stopRecording();
+    if (mediaBlobUrl && currentQuestion?._id) {
+      const response = await fetch(mediaBlobUrl);
+      const blob = await response.blob(); // This is the Blob object
+      addDataToIndexDb("smart-hire", { question_id: currentQuestion._id, blob });
+    }
+
     setCandidateAnswer("");
     if (currentQuestionIndex !== null) {
       const nextQuestionId = questions[currentQuestionIndex + 1]._id;
@@ -90,14 +107,14 @@ export const useInterviewModule = () => {
     }
   };
 
-  //   useEffect(() => {
-  //     if (timeLeft === 0) return;
-  //     const interval = setInterval(() => {
-  //       setTimeLeft((prevTime) => prevTime - 1);
-  //     }, 1000);
+  useEffect(() => {
+    if (timeLeft === 0) return;
+    const interval = setInterval(() => {
+      setTimeLeft((prevTime) => prevTime - 1);
+    }, 1000);
 
-  //     return () => clearInterval(interval);
-  //   }, [timeLeft]);
+    return () => clearInterval(interval);
+  }, [timeLeft]);
 
   const requestMediaPermission = async () => {
     try {

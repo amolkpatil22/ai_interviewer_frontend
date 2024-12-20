@@ -1,12 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+export enum QuestionTypes {
+  CODING = "coding",
+  OUTPUT = "output",
+  THEORY = "theory",
+}
+
 export interface Question {
   _id: string;
   category_id: string;
   sub_category_id: string;
   question: string;
   difficulty: string;
-  type: "coding" | "output" | "theory";
+  type: QuestionTypes;
   hint: string;
 }
 

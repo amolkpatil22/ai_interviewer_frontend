@@ -17,8 +17,8 @@ import {
   DialogHeader,
   DialogRoot,
   DialogTitle,
-  DialogTrigger,
 } from "../../Components/ui/dialog";
+import { QuestionTypes } from "../../Redux/QuestionsSlice/QuestionsSlice";
 
 export const InterviewModule: React.FC = () => {
   const {
@@ -54,7 +54,6 @@ export const InterviewModule: React.FC = () => {
           <Heading>Give permission and reload the page to proceed..</Heading>
         </Flex>
       </Show>
-
       <Show when={hasPermission === true}>
         <Text fontWeight={"bold"}>{`TimeLeft: ${formatTime(timeLeft)}`}</Text>
         <Flex height={"100%"} flexDir={"column"} justifyContent={"space-between"}>
@@ -90,20 +89,31 @@ export const InterviewModule: React.FC = () => {
           )}
           {/* <MonacoEditor saveViewState={true} height="400px" defaultLanguage="" defaultValue="// write your code" /> */}
           <Flex mt={"10%"} flexWrap={"wrap"} gap={"20px"} justifyContent={"center"}>
-            {!isSpeaking && !question_id && (
+            <Show when={!question_id}>
               <Button onClick={startInterview} colorPalette={"black"} minW={"120px"}>
                 Start Interview
               </Button>
-            )}
-            <Button colorPalette={"purple"} onClick={() => setIsCodeWriterOpen((prev) => !prev)}>
-              Code Writer
-            </Button>
-            <Button colorPalette={"black"} minW={"120px"}>
-              Skip
-            </Button>
-            <Button colorPalette={"red"} minW={"120px"}>
-              End Interview
-            </Button>
+            </Show>
+            <Show when={question_id}>
+              <Button onClick={submitAnswer}>Submit Answer</Button>
+            </Show>
+            <Show
+              when={currentQuestion?.type === QuestionTypes.CODING || currentQuestion?.type === QuestionTypes.OUTPUT}
+            >
+              <Button colorPalette={"purple"} onClick={() => setIsCodeWriterOpen((prev) => !prev)}>
+                Code Writer
+              </Button>
+            </Show>
+            <Show when={question_id}>
+              <Button onClick={submitAnswer} colorPalette={"black"} minW={"120px"}>
+                Skip
+              </Button>
+            </Show>
+            <Show when={question_id}>
+              <Button colorPalette={"red"} minW={"120px"}>
+                End Interview
+              </Button>
+            </Show>
           </Flex>
         </Flex>
         {/* jhi */}
@@ -114,13 +124,13 @@ export const InterviewModule: React.FC = () => {
           <DialogHeader>
             <DialogTitle>
               Q.
-              {currentQuestion?.type === "coding"
+              {currentQuestion?.type === QuestionTypes.CODING
                 ? "Achieve below step through coding"
                 : "Determine the output of the below code"}
             </DialogTitle>
             <Text>
-              {currentQuestion?.question.split("\n").map((q) => (
-                <Text>{q}</Text>
+              {currentQuestion?.question.split("\n").map((q, index) => (
+                <Text key={index}>{q}</Text>
               ))}
             </Text>
           </DialogHeader>
@@ -138,7 +148,6 @@ export const InterviewModule: React.FC = () => {
             <DialogActionTrigger asChild>
               <Button variant="outline">Minimize</Button>
             </DialogActionTrigger>
-            <Button onClick={submitAnswer}>Submit</Button>
           </DialogFooter>
           <DialogCloseTrigger />
         </DialogContent>
