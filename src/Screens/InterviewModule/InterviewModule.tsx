@@ -22,6 +22,7 @@ import { QuestionTypes } from "../../Redux/QuestionsSlice/QuestionsSlice";
 
 export const InterviewModule: React.FC = () => {
   const {
+    endInterview,
     currentQuestion,
     currentQuestionIndex,
     isSpeaking,
@@ -104,13 +105,13 @@ export const InterviewModule: React.FC = () => {
                 Code Writer
               </Button>
             </Show>
-            <Show when={question_id}>
+            <Show when={question_id && currentQuestionIndex && currentQuestionIndex < questions.length - 1}>
               <Button onClick={submitAnswer} colorPalette={"black"} minW={"120px"}>
                 Skip
               </Button>
             </Show>
             <Show when={question_id}>
-              <Button colorPalette={"red"} minW={"120px"}>
+              <Button onClick={endInterview} colorPalette={"red"} minW={"120px"}>
                 End Interview
               </Button>
             </Show>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { data, useNavigate, useParams } from "react-router-dom";
 import { RootState } from "../../../Redux/Store";
@@ -6,7 +6,7 @@ import { utteranceMessage } from "../../../Common/Utterance/Utterance";
 import { speakText } from "../../../Common/Utils/SpeakText";
 import { Question, QuestionTypes } from "../../../Redux/QuestionsSlice/QuestionsSlice";
 import { useReactMediaRecorder } from "react-media-recorder";
-import { addDataToIndexDb, getDataFromIndexDb, openDatabaseInIndexDb } from "../../../Common/Utils/IndexDb";
+import { addDataToIndexDb, openDatabaseInIndexDb } from "../../../Common/Utils/IndexDb";
 import { Blob } from "buffer";
 
 export const useInterviewModule = () => {
@@ -101,7 +101,7 @@ export const useInterviewModule = () => {
     }
 
     setCandidateAnswer("");
-    if (currentQuestionIndex !== null) {
+    if (currentQuestionIndex !== null && currentQuestionIndex < questions.length - 1) {
       const nextQuestionId = questions[currentQuestionIndex + 1]._id;
       navigate(`/interview/${session_id}/${nextQuestionId}`);
     }
@@ -115,6 +115,10 @@ export const useInterviewModule = () => {
 
     return () => clearInterval(interval);
   }, [timeLeft]);
+
+  const endInterview = () => {
+    navigate("/analysis");
+  };
 
   const requestMediaPermission = async () => {
     try {
@@ -131,6 +135,7 @@ export const useInterviewModule = () => {
   };
 
   return {
+    endInterview,
     isCodeWriterOpen,
     setIsCodeWriterOpen,
     candidateAnswer,
