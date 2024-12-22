@@ -3,4 +3,5 @@ export const utteranceMessage = {
   invalidQuestionId: "Candidate... Invalid question ID, Please go to the interview page and start again.",
   hereIsTheQuestion: "Here is the question.....",
   codingQuestion: "Please read the question carefully... and.... use the code writer to solve the question",
+  outputQuestion:'Please read the code carefully and determine the output'
 };

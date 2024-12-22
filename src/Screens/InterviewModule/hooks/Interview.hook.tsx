@@ -8,6 +8,8 @@ import { Question, QuestionTypes } from "../../../Redux/QuestionsSlice/Questions
 import { useReactMediaRecorder } from "react-media-recorder";
 import { addDataToIndexDb, openDatabaseInIndexDb } from "../../../Common/Utils/IndexDb";
 import { Blob } from "buffer";
+import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
+import { BotModes } from "../../../Common/Interfaces/BotModes.interface";
 
 export const useInterviewModule = () => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -18,9 +20,12 @@ export const useInterviewModule = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<Question>();
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
-  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [botMode, setBotMode] = useState<BotModes>(BotModes.Idle);
   const [isCodeWriterOpen, setIsCodeWriterOpen] = useState(false);
   const [candidateAnswer, setCandidateAnswer] = useState("");
+  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition, finalTranscript } =
+    useSpeechRecognition();
+
   const { status, startRecording, stopRecording, mediaBlobUrl } = useReactMediaRecorder({
     video: true,
     audio: true,
@@ -50,42 +55,46 @@ export const useInterviewModule = () => {
       startRecording();
     }
     handleSpeakingAfterQuestionChange();
+    SpeechRecognition.startListening({ continuous: true });
   }, [currentQuestion]);
 
   const handleInitialRender = () => {
-    onSpeakingHandler();
-    speakText({ text: utteranceMessage.welcome, onEnd: onSpeakingHandler });
+    setBotMode(BotModes.Speaking);
+    speakText({ text: utteranceMessage.welcome, onEnd: () => setBotMode(BotModes.Idle) });
   };
 
   const setCurrentQuestionAfterQuestionIdChange = () => {
     if (question_id) {
       const questionIndex = questions.findIndex((item) => item._id === question_id);
-      onSpeakingHandler();
+      setBotMode(BotModes.Speaking);
+
       if (questionIndex !== -1) {
-        setCurrentQuestion(questions[questionIndex]);
-        setCurrentQuestionIndex(questionIndex);
-        speakText({ text: utteranceMessage.hereIsTheQuestion, onEnd: onSpeakingHandler });
+        speakText({
+          text: utteranceMessage.hereIsTheQuestion,
+          onEnd: () => {
+            console.log("fire");
+            setBotMode(BotModes.Idle);
+            setCurrentQuestion(questions[questionIndex]);
+            setCurrentQuestionIndex(questionIndex);
+          },
+        });
       } else {
-        speakText({ text: utteranceMessage.invalidQuestionId, onEnd: onSpeakingHandler });
+        speakText({ text: utteranceMessage.invalidQuestionId, onEnd: () => setBotMode(BotModes.Idle) });
       }
     }
   };
 
   const handleSpeakingAfterQuestionChange = () => {
     if (currentQuestion) {
-      onSpeakingHandler();
+      setBotMode(BotModes.Speaking);
       if (currentQuestion.type === QuestionTypes.CODING) {
-        speakText({ text: utteranceMessage.codingQuestion, onEnd: () => onSpeakingHandler });
+        speakText({ text: utteranceMessage.codingQuestion, onEnd: () => setBotMode(BotModes.Listening) });
       } else if (currentQuestion.type === QuestionTypes.OUTPUT) {
-        speakText({ text: `Question. ${currentQuestion?.question}`, onEnd: () => onSpeakingHandler });
+        speakText({ text: utteranceMessage.outputQuestion, onEnd: () => setBotMode(BotModes.Listening) });
       } else {
-        speakText({ text: `Question. ${currentQuestion?.question}`, onEnd: () => onSpeakingHandler });
+        speakText({ text: `Question. ${currentQuestion?.question}`, onEnd: () => setBotMode(BotModes.Listening) });
       }
     }
-  };
-
-  const onSpeakingHandler = () => {
-    setIsSpeaking((prev) => !prev);
   };
 
   const startInterview = () => {
@@ -93,7 +102,10 @@ export const useInterviewModule = () => {
   };
 
   const submitAnswer = async () => {
+    SpeechRecognition.stopListening();
     stopRecording();
+    setBotMode(BotModes.Idle);
+
     if (mediaBlobUrl && currentQuestion?._id) {
       const response = await fetch(mediaBlobUrl);
       const blob = await response.blob(); // This is the Blob object
@@ -101,6 +113,7 @@ export const useInterviewModule = () => {
     }
 
     setCandidateAnswer("");
+
     if (currentQuestionIndex !== null && currentQuestionIndex < questions.length - 1) {
       const nextQuestionId = questions[currentQuestionIndex + 1]._id;
       navigate(`/interview/${session_id}/${nextQuestionId}`);
@@ -112,7 +125,6 @@ export const useInterviewModule = () => {
     const interval = setInterval(() => {
       setTimeLeft((prevTime) => prevTime - 1);
     }, 1000);
-
     return () => clearInterval(interval);
   }, [timeLeft]);
 
@@ -135,6 +147,8 @@ export const useInterviewModule = () => {
   };
 
   return {
+    listening,
+    browserSupportsSpeechRecognition,
     endInterview,
     isCodeWriterOpen,
     setIsCodeWriterOpen,
@@ -143,7 +157,7 @@ export const useInterviewModule = () => {
     currentQuestion,
     currentQuestionIndex,
     questions,
-    isSpeaking,
+    botMode,
     timeLeft,
     hasPermission,
     requestMediaPermission,

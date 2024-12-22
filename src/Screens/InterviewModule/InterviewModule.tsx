@@ -19,15 +19,18 @@ import {
   DialogTitle,
 } from "../../Components/ui/dialog";
 import { QuestionTypes } from "../../Redux/QuestionsSlice/QuestionsSlice";
+import { BotModes } from "../../Common/Interfaces/BotModes.interface";
 
 export const InterviewModule: React.FC = () => {
   const {
+    browserSupportsSpeechRecognition,
     endInterview,
     currentQuestion,
     currentQuestionIndex,
-    isSpeaking,
+    botMode,
     hasPermission,
     timeLeft,
+    listening,
     question_id,
     startInterview,
     questions,
@@ -41,6 +44,13 @@ export const InterviewModule: React.FC = () => {
 
   return (
     <Box backgroundColor={"#F5F5F5"} minH={"100vh"} padding={"1%"}>
+      <Show when={!browserSupportsSpeechRecognition}>
+        <Flex textAlign={"center"} flex={1} flexDir={"column"} alignItems={"center"}>
+          <Image width={"100%"} flex={1} maxW={"300px"} flexShrink={1} src={require("../../Assets/bot.png")}></Image>
+          <Heading>Browser doesn't support speech recognition. Please try different browser</Heading>
+        </Flex>
+      </Show>
+
       <Show when={hasPermission === null}>
         <Flex textAlign={"center"} flex={1} flexDir={"column"} alignItems={"center"}>
           <Image width={"100%"} flex={1} maxW={"300px"} flexShrink={1} src={require("../../Assets/bot.png")}></Image>
@@ -68,9 +78,30 @@ export const InterviewModule: React.FC = () => {
                 mb={0}
                 src={require("../../Assets/bot.png")}
               ></Image>
-              <Text mt={-30} className="blinking-text" opacity={1} fontWeight={"bold"} color={"purple"} fontSize={"lg"}>
-                Listening...
-              </Text>
+              <Show when={botMode === BotModes.Speaking}>
+                <Text
+                  mt={-30}
+                  className="blinking-text"
+                  opacity={1}
+                  fontWeight={"bold"}
+                  color={"purple"}
+                  fontSize={"lg"}
+                >
+                  Speaking...
+                </Text>
+              </Show>
+              <Show when={botMode === BotModes.Listening}>
+                <Text
+                  mt={-30}
+                  className="blinking-text"
+                  opacity={1}
+                  fontWeight={"bold"}
+                  color={"purple"}
+                  fontSize={"lg"}
+                >
+                  Listening...
+                </Text>
+              </Show>
             </Flex>
             <Box
               display={{ base: "none", sm: "none", md: "block" }}
