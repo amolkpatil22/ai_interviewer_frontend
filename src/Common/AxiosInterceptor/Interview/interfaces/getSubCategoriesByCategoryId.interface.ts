@@ -5,6 +5,6 @@ export interface getSubCategoriesByCategoryIdHttpsData {
 }
 
 export interface getSubCategoriesByCategoryIdHttpsResponse {
-  header: Object;
+  headers: Object;
   data: getSubCategoriesByCategoryIdHttpsData[];
 }

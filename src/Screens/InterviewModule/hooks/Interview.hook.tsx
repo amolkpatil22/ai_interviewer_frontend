@@ -10,6 +10,8 @@ import { addDataToIndexDb, openDatabaseInIndexDb } from "../../../Common/Utils/I
 import { Blob } from "buffer";
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import { BotModes } from "../../../Common/Interfaces/BotModes.interface";
+import { submitCandidatesAnswer } from "../https/InterviewModule.https";
+import { toaster } from "../../../Components/ui/toaster";
 
 export const useInterviewModule = () => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -88,11 +90,29 @@ export const useInterviewModule = () => {
     if (currentQuestion) {
       setBotMode(BotModes.Speaking);
       if (currentQuestion.type === QuestionTypes.CODING) {
-        speakText({ text: utteranceMessage.codingQuestion, onEnd: () => setBotMode(BotModes.Listening) });
+        speakText({
+          text: utteranceMessage.codingQuestion,
+          onEnd: () => {
+            setBotMode(BotModes.Listening);
+            resetTranscript();
+          },
+        });
       } else if (currentQuestion.type === QuestionTypes.OUTPUT) {
-        speakText({ text: utteranceMessage.outputQuestion, onEnd: () => setBotMode(BotModes.Listening) });
+        speakText({
+          text: utteranceMessage.outputQuestion,
+          onEnd: () => {
+            setBotMode(BotModes.Listening);
+            resetTranscript();
+          },
+        });
       } else {
-        speakText({ text: `Question. ${currentQuestion?.question}`, onEnd: () => setBotMode(BotModes.Listening) });
+        speakText({
+          text: `Question. ${currentQuestion?.question}`,
+          onEnd: () => {
+            setBotMode(BotModes.Listening);
+            resetTranscript();
+          },
+        });
       }
     }
   };
@@ -102,21 +122,46 @@ export const useInterviewModule = () => {
   };
 
   const submitAnswer = async () => {
-    SpeechRecognition.stopListening();
-    stopRecording();
-    setBotMode(BotModes.Idle);
+    if (session_id && question_id) {
+      SpeechRecognition.stopListening();
+      stopRecording();
+      setBotMode(BotModes.Idle);
 
-    if (mediaBlobUrl && currentQuestion?._id) {
-      const response = await fetch(mediaBlobUrl);
-      const blob = await response.blob(); // This is the Blob object
-      addDataToIndexDb("smart-hire", { question_id: currentQuestion._id, blob });
-    }
+      if (mediaBlobUrl && currentQuestion?._id) {
+        const response = await fetch(mediaBlobUrl);
+        const blob = await response.blob(); // This is the Blob object
+        addDataToIndexDb("smart-hire", { question_id: currentQuestion._id, blob });
+      }
 
-    setCandidateAnswer("");
+      let finalCandidateAnswer = "";
 
-    if (currentQuestionIndex !== null && currentQuestionIndex < questions.length - 1) {
-      const nextQuestionId = questions[currentQuestionIndex + 1]._id;
-      navigate(`/interview/${session_id}/${nextQuestionId}`);
+      if (currentQuestion?.type === QuestionTypes.THEORY) {
+        finalCandidateAnswer = finalTranscript;
+      } else {
+        finalCandidateAnswer = candidateAnswer;
+      }
+      
+      // const submitAnswer = await submitCandidatesAnswer({
+      //   session_id: session_id,
+      //   payload: { candidate_answer: finalCandidateAnswer, question_id: question_id },
+      // });
+
+      // if (submitAnswer.status === false) {
+      //   toaster.create({
+      //     type: "error",
+      //     title: "Submission Failed",
+      //     description: submitAnswer.message,
+      //     duration: 3000,
+      //   });
+      //   return;
+      // }
+
+      setCandidateAnswer("");
+
+      if (currentQuestionIndex !== null && currentQuestionIndex < questions.length - 1) {
+        const nextQuestionId = questions[currentQuestionIndex + 1]._id;
+        navigate(`/interview/${session_id}/${nextQuestionId}`);
+      }
     }
   };
 
