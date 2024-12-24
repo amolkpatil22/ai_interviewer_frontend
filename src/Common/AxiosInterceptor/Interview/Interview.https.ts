@@ -1,6 +1,7 @@
 import axiosInstance from "../AxiosInstance";
 import { CreateSessionHttpsRequest, CreateSessionHttpsResponse } from "./interfaces/createSession.interface";
 import { getAllCategoriesHttpsResponse } from "./interfaces/getAllCategories.interfce";
+import { GetInterviewFeedbackHttpsResponse } from "./interfaces/getInterviewFeedback.interface";
 import { getSubCategoriesByCategoryIdHttpsResponse } from "./interfaces/getSubCategoriesByCategoryId.interface";
 import {
   submitCandidatesAnswerHttpsRequest,
@@ -23,3 +24,6 @@ export const submitCandidatesAnswerHttps = async ({
   session_id,
 }: submitCandidatesAnswerHttpsRequest): Promise<submitCandidatesAnswerHttpsResponse> =>
   await axiosInstance.post(`/interview/submit-answer/${session_id}`, payload);
+
+export const getInterviewFeedbackHttps = async (session_id: string): Promise<GetInterviewFeedbackHttpsResponse> =>
+  await axiosInstance.post(`/interview/get-report/${session_id}`);

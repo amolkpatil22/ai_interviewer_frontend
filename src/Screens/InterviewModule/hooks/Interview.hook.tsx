@@ -25,6 +25,7 @@ export const useInterviewModule = () => {
   const [botMode, setBotMode] = useState<BotModes>(BotModes.Idle);
   const [isCodeWriterOpen, setIsCodeWriterOpen] = useState(false);
   const [candidateAnswer, setCandidateAnswer] = useState("");
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
   const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition, finalTranscript } =
     useSpeechRecognition();
 
@@ -123,6 +124,7 @@ export const useInterviewModule = () => {
 
   const submitAnswer = async () => {
     if (session_id && question_id) {
+      setIsSubmitLoading(true);
       SpeechRecognition.stopListening();
       stopRecording();
       setBotMode(BotModes.Idle);
@@ -136,11 +138,11 @@ export const useInterviewModule = () => {
       let finalCandidateAnswer = "";
 
       if (currentQuestion?.type === QuestionTypes.THEORY) {
-        finalCandidateAnswer = finalTranscript;
+        finalCandidateAnswer = finalTranscript.trim();
       } else {
-        finalCandidateAnswer = candidateAnswer;
+        finalCandidateAnswer = candidateAnswer.trim();
       }
-      
+
       // const submitAnswer = await submitCandidatesAnswer({
       //   session_id: session_id,
       //   payload: { candidate_answer: finalCandidateAnswer, question_id: question_id },
@@ -157,7 +159,7 @@ export const useInterviewModule = () => {
       // }
 
       setCandidateAnswer("");
-
+      setIsSubmitLoading(false);
       if (currentQuestionIndex !== null && currentQuestionIndex < questions.length - 1) {
         const nextQuestionId = questions[currentQuestionIndex + 1]._id;
         navigate(`/interview/${session_id}/${nextQuestionId}`);
@@ -192,6 +194,7 @@ export const useInterviewModule = () => {
   };
 
   return {
+    isSubmitLoading,
     listening,
     browserSupportsSpeechRecognition,
     endInterview,

@@ -19,7 +19,7 @@ export const NavigationRouter: React.FC = () => {
             <AnalysisModule />
           </AuthWrapper>
         }
-        path="/analysis"
+        path="/analysis/:session_id"
       />
       <Route
         element={

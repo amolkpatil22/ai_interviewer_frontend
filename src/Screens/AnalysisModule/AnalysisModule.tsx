@@ -7,13 +7,15 @@ import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
 export const AnalysisModule: React.FC = () => {
-  const { getScoreColor, isResultAvailable, score } = useAnalysisModule();
+  const { getScoreColor, categoryWiseScore, overallScore, interviewReport, isResultAvailable, getFeedback } =
+    useAnalysisModule();
 
   return (
     <Box flex={1}>
       {!isResultAvailable && (
         <Flex height={"90vh"} flex={1} justifyContent={"center"} alignItems={"center"}>
           <Button
+            onClick={getFeedback}
             fontWeight={"bold"}
             marginLeft={"5%"}
             mr={"5%"}
@@ -39,7 +41,7 @@ export const AnalysisModule: React.FC = () => {
           >
             <Flex maxW={"100%"} flex={1} alignItems={"center"}>
               <Text color={"#0fa4d3"} fontWeight={"bold"}>
-                TechStack:
+                TechStack: {interviewReport?.interview_data.tech}
               </Text>
               <Text fontWeight={"bold"} color={"#9333E9"}>
                 MERN Stack
@@ -49,17 +51,17 @@ export const AnalysisModule: React.FC = () => {
           </Flex>
           <Flex flexDir={"column"} mt={"30px"} textAlign={"center"} ml={"5%"} mr={"5%"} alignItems={"center"}>
             <Text fontWeight={"bold"} color={"#9333E9"}>
-              Your Overall Score: {score}
+              Your Overall Score: {overallScore}
             </Text>
             <ProgressRoot
-              key={score}
+              key={overallScore}
               mt={"20px"}
               width={"99.5%"}
               max={10}
               min={0}
-              value={score}
+              value={overallScore}
               animated={true}
-              colorPalette={getScoreColor(score)}
+              colorPalette={getScoreColor(overallScore)}
             >
               <ProgressBar
                 border={"solid #9333E9 2px"}
@@ -122,9 +124,9 @@ export const AnalysisModule: React.FC = () => {
                 <CircularProgressbar
                   maxValue={10}
                   minValue={0}
-                  value={score}
+                  value={categoryWiseScore?.understanding_of_question}
                   strokeWidth={15}
-                  text={`${score}/10`}
+                  text={`${categoryWiseScore?.understanding_of_question}/10`}
                   styles={buildStyles({
                     pathTransitionDuration: 3,
                     strokeLinecap: "butt",
@@ -143,9 +145,9 @@ export const AnalysisModule: React.FC = () => {
                 <CircularProgressbar
                   maxValue={10}
                   minValue={0}
-                  value={score}
+                  value={categoryWiseScore?.subject_knowledge}
                   strokeWidth={15}
-                  text={`${score}/10`}
+                  text={`${categoryWiseScore?.subject_knowledge}/10`}
                   styles={buildStyles({
                     pathTransitionDuration: 3,
                     strokeLinecap: "butt",
@@ -163,9 +165,9 @@ export const AnalysisModule: React.FC = () => {
                 <CircularProgressbar
                   maxValue={10}
                   minValue={0}
-                  value={score}
+                  value={categoryWiseScore?.quality_of_answer}
                   strokeWidth={15}
-                  text={`${score}/10`}
+                  text={`${categoryWiseScore?.quality_of_answer}/10`}
                   styles={buildStyles({
                     pathTransitionDuration: 3,
                     strokeLinecap: "butt",
@@ -183,9 +185,9 @@ export const AnalysisModule: React.FC = () => {
                 <CircularProgressbar
                   maxValue={10}
                   minValue={0}
-                  value={score}
+                  value={categoryWiseScore?.accuracy_of_answer}
                   strokeWidth={15}
-                  text={`${score}/10`}
+                  text={`${categoryWiseScore?.accuracy_of_answer}/10`}
                   styles={buildStyles({
                     pathTransitionDuration: 3,
                     strokeLinecap: "butt",
@@ -202,14 +204,15 @@ export const AnalysisModule: React.FC = () => {
             <Flex justifyContent={"center"} color={"purple"}>
               <Heading>Detailed analysis of your answers</Heading>
             </Flex>
-            {Array.from({ length: 12 }).map((_, ind) => {
+            {interviewReport?.feedback.map((item, ind) => {
               return (
                 <Box key={ind} mt={"30px"}>
                   <Flex gap={"10px"}>
                     <Text fontWeight={"bold"}>Q.{ind + 1}</Text>
                     <Text fontWeight={"bold"}>
-                      What will be the output of the following code? let a = [1, 2]; let b = a; b.push(3);
-                      console.log(a);
+                      {item.question.split("\n").map((str) => (
+                        <Text>{str}</Text>
+                      ))}
                     </Text>
                   </Flex>
                   <Box ml={"32px"} mt={"20px"}>
@@ -217,36 +220,21 @@ export const AnalysisModule: React.FC = () => {
                       Candidate Answer:
                     </Text>
                     <Text>
-                      React Hooks are functions that allow functional components to manage state and side effects. The
-                      primary difference between class components and functional components with hooks is that
-                      functional components use hooks like 'useState' and 'useEffect' to handle state and lifecycle
-                      events without the need for a class. Hooks improve maintainability by reducing boilerplate code
-                      and making the codebase easier to read.
+                      {!item.candidate_answer && <Text>Candidate did not Answer</Text>}
+                      {item.candidate_answer && item.candidate_answer.split("\n").map((str) => <Text>{str}</Text>)}
                     </Text>
                   </Box>
                   <Box ml={"32px"} mt={"20px"}>
                     <Text color={"gray"} fontWeight={"bold"}>
                       What Went Well:
                     </Text>
-                    <Text>
-                      React Hooks are functions that allow functional components to manage state and side effects. The
-                      primary difference between class components and functional components with hooks is that
-                      functional components use hooks like 'useState' and 'useEffect' to handle state and lifecycle
-                      events without the need for a class. Hooks improve maintainability by reducing boilerplate code
-                      and making the codebase easier to read.
-                    </Text>
+                    <Text>{item.what_went_well}</Text>
                   </Box>
                   <Box ml={"32px"} mt={"20px"}>
                     <Text color={"gray"} fontWeight={"bold"}>
                       What Can Be Improved:
                     </Text>
-                    <Text>
-                      React Hooks are functions that allow functional components to manage state and side effects. The
-                      primary difference between class components and functional components with hooks is that
-                      functional components use hooks like 'useState' and 'useEffect' to handle state and lifecycle
-                      events without the need for a class. Hooks improve maintainability by reducing boilerplate code
-                      and making the codebase easier to read.
-                    </Text>
+                    <Text>{item.what_went_wrong}</Text>
                   </Box>
                   <Box ml={"32px"} mt={"20px"} fontWeight={"bold"}>
                     <Text color={"#9333E9"}>Scores:</Text>
@@ -255,7 +243,7 @@ export const AnalysisModule: React.FC = () => {
                         Understanding of the question:
                       </Text>
                       <Text fontWeight={"normal"} color={"#9333E9"}>
-                        8/10
+                        {item.understanding_of_question} / 10
                       </Text>
                     </Flex>
                     <Flex gap={"5px"} alignItems={"center"} justifyContent={"left"}>
@@ -263,7 +251,7 @@ export const AnalysisModule: React.FC = () => {
                         Accuracy of the answer:
                       </Text>
                       <Text fontWeight={"normal"} color={"#9333E9"}>
-                        8/10
+                        {item.accuracy_of_answer} / 10
                       </Text>
                     </Flex>
                     <Flex gap={"5px"} alignItems={"center"} justifyContent={"left"}>
@@ -271,7 +259,7 @@ export const AnalysisModule: React.FC = () => {
                         Subject knowledge:
                       </Text>
                       <Text fontWeight={"normal"} color={"#9333E9"}>
-                        8/10
+                        {item.subject_knowledge} / 10
                       </Text>
                     </Flex>
                     <Flex gap={"5px"} alignItems={"center"} justifyContent={"left"}>
@@ -279,7 +267,7 @@ export const AnalysisModule: React.FC = () => {
                         Code/Answer Quality:
                       </Text>
                       <Text fontWeight={"normal"} color={"#9333E9"}>
-                        8/10
+                        {item.quality_of_answer} / 10
                       </Text>
                     </Flex>
                     <Flex gap={"5px"} alignItems={"center"} justifyContent={"left"}>
@@ -287,7 +275,11 @@ export const AnalysisModule: React.FC = () => {
                         Overall:
                       </Text>
                       <Text fontWeight={"normal"} color={"#9333E9"}>
-                        8/10
+                        {(item.accuracy_of_answer +
+                          item.understanding_of_question +
+                          item.quality_of_answer +
+                          item.subject_knowledge) /
+                          4}
                       </Text>
                     </Flex>
                   </Box>

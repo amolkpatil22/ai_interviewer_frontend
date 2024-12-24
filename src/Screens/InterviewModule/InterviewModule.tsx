@@ -23,6 +23,7 @@ import { BotModes } from "../../Common/Interfaces/BotModes.interface";
 
 export const InterviewModule: React.FC = () => {
   const {
+    isSubmitLoading,
     browserSupportsSpeechRecognition,
     endInterview,
     currentQuestion,
@@ -127,7 +128,9 @@ export const InterviewModule: React.FC = () => {
               </Button>
             </Show>
             <Show when={question_id}>
-              <Button onClick={submitAnswer}>Submit Answer</Button>
+              <Button loading={isSubmitLoading} onClick={submitAnswer}>
+                Submit Answer
+              </Button>
             </Show>
             <Show
               when={currentQuestion?.type === QuestionTypes.CODING || currentQuestion?.type === QuestionTypes.OUTPUT}
@@ -137,7 +140,7 @@ export const InterviewModule: React.FC = () => {
               </Button>
             </Show>
             <Show when={question_id && currentQuestionIndex && currentQuestionIndex < questions.length - 1}>
-              <Button onClick={submitAnswer} colorPalette={"black"} minW={"120px"}>
+              <Button loading={isSubmitLoading} onClick={submitAnswer} colorPalette={"black"} minW={"120px"}>
                 Skip
               </Button>
             </Show>
