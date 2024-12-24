@@ -163,6 +163,8 @@ export const useInterviewModule = () => {
       if (currentQuestionIndex !== null && currentQuestionIndex < questions.length - 1) {
         const nextQuestionId = questions[currentQuestionIndex + 1]._id;
         navigate(`/interview/${session_id}/${nextQuestionId}`);
+      } else {
+        navigate(`/analysis/${session_id}`);
       }
     }
   };
@@ -176,7 +178,7 @@ export const useInterviewModule = () => {
   }, [timeLeft]);
 
   const endInterview = () => {
-    navigate("/analysis");
+    navigate(`/analysis/${session_id}`);
   };
 
   const requestMediaPermission = async () => {
