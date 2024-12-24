@@ -44,10 +44,10 @@ export const useAnalysisModule = () => {
         }
       );
       setCategoryWiseScore({
-        accuracy_of_answer: sum.accuracy_of_answer / interviewReport.feedback.length,
-        understanding_of_question: sum.understanding_of_question / interviewReport.feedback.length,
-        subject_knowledge: sum.subject_knowledge / interviewReport.feedback.length,
-        quality_of_answer: sum.quality_of_answer / interviewReport.feedback.length,
+        accuracy_of_answer: +(sum.accuracy_of_answer / interviewReport.feedback.length).toFixed(1),
+        understanding_of_question: +(sum.understanding_of_question / interviewReport.feedback.length).toFixed(1),
+        subject_knowledge: +(sum.subject_knowledge / interviewReport.feedback.length).toFixed(1),
+        quality_of_answer: +(sum.quality_of_answer / interviewReport.feedback.length).toFixed(1),
       });
     }
   };
@@ -59,7 +59,7 @@ export const useAnalysisModule = () => {
         categoryWiseScore.quality_of_answer +
         categoryWiseScore.subject_knowledge +
         categoryWiseScore.understanding_of_question;
-      setOverallScore(sum / 4);
+      setOverallScore(+(sum / 4).toFixed(1));
     }
   };
 

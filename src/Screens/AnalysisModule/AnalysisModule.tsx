@@ -275,11 +275,13 @@ export const AnalysisModule: React.FC = () => {
                         Overall:
                       </Text>
                       <Text fontWeight={"normal"} color={"#9333E9"}>
-                        {(item.accuracy_of_answer +
-                          item.understanding_of_question +
-                          item.quality_of_answer +
-                          item.subject_knowledge) /
-                          4}
+                        {(
+                          (item.accuracy_of_answer +
+                            item.understanding_of_question +
+                            item.quality_of_answer +
+                            item.subject_knowledge) /
+                          4
+                        ).toFixed(1)}
                       </Text>
                     </Flex>
                   </Box>
