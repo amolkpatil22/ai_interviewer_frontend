@@ -143,20 +143,20 @@ export const useInterviewModule = () => {
         finalCandidateAnswer = candidateAnswer.trim();
       }
 
-      // const submitAnswer = await submitCandidatesAnswer({
-      //   session_id: session_id,
-      //   payload: { candidate_answer: finalCandidateAnswer, question_id: question_id },
-      // });
+      const submitAnswer = await submitCandidatesAnswer({
+        session_id: session_id,
+        payload: { candidate_answer: finalCandidateAnswer, question_id: question_id },
+      });
 
-      // if (submitAnswer.status === false) {
-      //   toaster.create({
-      //     type: "error",
-      //     title: "Submission Failed",
-      //     description: submitAnswer.message,
-      //     duration: 3000,
-      //   });
-      //   return;
-      // }
+      if (submitAnswer.status === false) {
+        toaster.create({
+          type: "error",
+          title: "Submission Failed",
+          description: submitAnswer.message,
+          duration: 3000,
+        });
+        return;
+      }
 
       setCandidateAnswer("");
       setIsSubmitLoading(false);
