@@ -46,7 +46,6 @@ export const NavigationBar: React.FC = () => {
           fontWeight={"bold"}
           color={"#0fa4d3"}
           flexShrink={0}
-          onClick={() => navigate("/interview")}
         >
           How do we Work
         </Text>
@@ -58,7 +57,6 @@ export const NavigationBar: React.FC = () => {
           fontWeight={"bold"}
           color={"#0fa4d3"}
           flexShrink={0}
-          onClick={() => navigate("/analysis")}
         >
           About Us
         </Text>
