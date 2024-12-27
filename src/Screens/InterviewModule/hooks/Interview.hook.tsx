@@ -76,7 +76,6 @@ export const useInterviewModule = () => {
         speakText({
           text: utteranceMessage.hereIsTheQuestion,
           onEnd: () => {
-            console.log("fire");
             setBotMode(BotModes.Idle);
             setCurrentQuestion(questions[questionIndex]);
             setCurrentQuestionIndex(questionIndex);

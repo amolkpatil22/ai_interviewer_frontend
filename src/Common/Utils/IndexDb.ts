@@ -25,13 +25,6 @@ export const addDataToIndexDb = async (dbName: string, data: { question_id: stri
   const store = transaction.objectStore("media");
 
   store.put(data);
-
-  transaction.oncomplete = () => {
-    console.log("Data added successfully");
-  };
-  transaction.onerror = (event) => {
-    console.error("Transaction failed", event.target);
-  };
 };
 
 export const getDataFromIndexDb = async (dbName: string, question_id: string): Promise<Blob | undefined> => {

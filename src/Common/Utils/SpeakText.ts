@@ -30,11 +30,4 @@ export const speakText = async ({ text, onEnd }: SpeakTextProps) => {
       }
     };
   }
-
-  // setTimeout(() => {
-  //   if (!isOnEndFired) {
-  //     console.log("manual fire");
-  //     onEnd(); // Fire onEnd manually
-  //   }
-  // }, 10000);
 };
