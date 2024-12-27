@@ -4,12 +4,15 @@ import { getInterviewFeedback } from "../https/AnalysisModule.https";
 import { useParams } from "react-router-dom";
 import { toaster } from "../../../Components/ui/toaster";
 import { CategoryWiseScore } from "../interfaces/AnalysisModule.interface";
+import { getAllDataFromIndexDb, getDataFromIndexDb } from "../../../Common/Utils/IndexDb";
 
 export const useAnalysisModule = () => {
   const [isResultAvailable, setIsResultAvailable] = useState(false);
   const { session_id } = useParams();
   const [interviewReport, setInterViewReport] = useState<GetInterviewFeedbackHttpsData>();
   const [overallScore, setOverallScore] = useState<number>(0);
+  const [isGenerateReportLoading, setIsGenerateReportLoading] = useState(false);
+  const [recordingUrls, setRecordingUrls] = useState<{ question_id: string; url: string }[]>([]);
   const [categoryWiseScore, setCategoryWiseScore] = useState<CategoryWiseScore>({
     accuracy_of_answer: 0,
     quality_of_answer: 0,
@@ -24,6 +27,10 @@ export const useAnalysisModule = () => {
   useEffect(() => {
     calculateCategoryOverallScore();
   }, [interviewReport]);
+
+  useEffect(() => {
+    fetchRecordings();
+  }, []);
 
   const calculateCategoryOverallScore = () => {
     if (interviewReport) {
@@ -80,6 +87,7 @@ export const useAnalysisModule = () => {
   };
 
   const getFeedback = async () => {
+    setIsGenerateReportLoading(true);
     if (session_id) {
       const response = await getInterviewFeedback(session_id);
       if (response.status && response.data) {
@@ -93,15 +101,44 @@ export const useAnalysisModule = () => {
           duration: 3000,
         });
       }
+      setIsGenerateReportLoading(false);
+    }
+  };
+
+  const fetchRecordings = async () => {
+    try {
+      const response = await getAllDataFromIndexDb("smart-hire");
+      if (response) {
+        //convert blob to url
+        const transformedData = response.map((item) => {
+          return {
+            question_id: item.question_id,
+            url: URL.createObjectURL(item.blob),
+          };
+        });
+        setRecordingUrls(transformedData);
+      }
+    } catch (error: unknown) {}
+  };
+
+  const getRecording = (question_id: string) => {
+    const filteredData = recordingUrls.filter((item) => question_id === item.question_id);
+    if (filteredData.length > 0) {
+      return filteredData[0].url;
+    } else {
+      return undefined;
     }
   };
 
   return {
+    recordingUrls,
+    isGenerateReportLoading,
     categoryWiseScore,
     overallScore,
     interviewReport,
     getFeedback,
     isResultAvailable,
     getScoreColor,
+    getRecording,
   };
 };

@@ -1,20 +1,31 @@
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Show, Table, Text } from "@chakra-ui/react";
 import React from "react";
 import { Button } from "../../Components/ui/button";
 import { ProgressBar, ProgressRoot } from "../../Components/ui/progress";
 import { useAnalysisModule } from "./hooks/AnalysisModule.hook";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { getDataFromIndexDb } from "../../Common/Utils/IndexDb";
 
 export const AnalysisModule: React.FC = () => {
-  const { getScoreColor, categoryWiseScore, overallScore, interviewReport, isResultAvailable, getFeedback } =
-    useAnalysisModule();
+  const {
+    recordingUrls,
+    isGenerateReportLoading,
+    getScoreColor,
+    categoryWiseScore,
+    overallScore,
+    interviewReport,
+    isResultAvailable,
+    getRecording,
+    getFeedback,
+  } = useAnalysisModule();
 
   return (
     <Box flex={1}>
       {!isResultAvailable && (
         <Flex height={"90vh"} flex={1} justifyContent={"center"} alignItems={"center"}>
           <Button
+            loading={isGenerateReportLoading}
             onClick={getFeedback}
             fontWeight={"bold"}
             marginLeft={"5%"}
@@ -236,55 +247,82 @@ export const AnalysisModule: React.FC = () => {
                     </Text>
                     <Text>{item.what_went_wrong}</Text>
                   </Box>
-                  <Box ml={"32px"} mt={"20px"} fontWeight={"bold"}>
-                    <Text color={"#9333E9"}>Scores:</Text>
-                    <Flex gap={"5px"} alignItems={"center"} justifyContent={"left"}>
-                      <Text fontWeight={"normal"} color={"#0fa4d3"}>
-                        Understanding of the question:
-                      </Text>
-                      <Text fontWeight={"normal"} color={"#9333E9"}>
-                        {item.understanding_of_question} / 10
-                      </Text>
-                    </Flex>
-                    <Flex gap={"5px"} alignItems={"center"} justifyContent={"left"}>
-                      <Text fontWeight={"normal"} color={"#0fa4d3"}>
-                        Accuracy of the answer:
-                      </Text>
-                      <Text fontWeight={"normal"} color={"#9333E9"}>
-                        {item.accuracy_of_answer} / 10
-                      </Text>
-                    </Flex>
-                    <Flex gap={"5px"} alignItems={"center"} justifyContent={"left"}>
-                      <Text fontWeight={"normal"} color={"#0fa4d3"}>
-                        Subject knowledge:
-                      </Text>
-                      <Text fontWeight={"normal"} color={"#9333E9"}>
-                        {item.subject_knowledge} / 10
-                      </Text>
-                    </Flex>
-                    <Flex gap={"5px"} alignItems={"center"} justifyContent={"left"}>
-                      <Text fontWeight={"normal"} color={"#0fa4d3"}>
-                        Code/Answer Quality:
-                      </Text>
-                      <Text fontWeight={"normal"} color={"#9333E9"}>
-                        {item.quality_of_answer} / 10
-                      </Text>
-                    </Flex>
-                    <Flex gap={"5px"} alignItems={"center"} justifyContent={"left"}>
-                      <Text fontWeight={"normal"} color={"#0fa4d3"}>
-                        Overall:
-                      </Text>
-                      <Text fontWeight={"normal"} color={"#9333E9"}>
-                        {(
-                          (item.accuracy_of_answer +
-                            item.understanding_of_question +
-                            item.quality_of_answer +
-                            item.subject_knowledge) /
-                          4
-                        ).toFixed(1)}
-                      </Text>
-                    </Flex>
-                  </Box>
+                  <Flex
+                    flexShrink={1}
+                    flexWrap={"wrap"}
+                    ml={"32px"}
+                    mt={"20px"}
+                    gap={"5%"}
+                    alignItems={"center"}
+                    rowGap={"30px"}
+                  >
+                    <Box fontWeight={"bold"}>
+                      <Table.Root size="sm" variant="outline">
+                        <Table.Header>
+                          <Table.Row>
+                            <Table.ColumnHeader>Section</Table.ColumnHeader>
+                            <Table.ColumnHeader>Score</Table.ColumnHeader>
+                          </Table.Row>
+                        </Table.Header>
+                        <Table.Body>
+                          <Table.Row key={item._id}>
+                            <Table.Cell color={"#0fa4d3"}> Understanding of the question</Table.Cell>
+                            <Table.Cell textAlign={"center"} color={"#9333E9"}>
+                              {" "}
+                              {item.understanding_of_question}
+                            </Table.Cell>
+                          </Table.Row>
+                          <Table.Row key={item._id}>
+                            <Table.Cell color={"#0fa4d3"}> Accuracy of the answer</Table.Cell>
+                            <Table.Cell textAlign={"center"} color={"#9333E9"}>
+                              {" "}
+                              {item.accuracy_of_answer}
+                            </Table.Cell>
+                          </Table.Row>
+                          <Table.Row key={item._id}>
+                            <Table.Cell color={"#0fa4d3"}> Subject knowledge</Table.Cell>
+                            <Table.Cell textAlign={"center"} color={"#9333E9"}>
+                              {" "}
+                              {item.subject_knowledge}
+                            </Table.Cell>
+                          </Table.Row>
+                          <Table.Row key={item._id}>
+                            <Table.Cell color={"#0fa4d3"}> Code/Answer Quality</Table.Cell>
+                            <Table.Cell textAlign={"center"} color={"#9333E9"}>
+                              {" "}
+                              {item.quality_of_answer}
+                            </Table.Cell>
+                          </Table.Row>
+                          <Table.Row key={item._id}>
+                            <Table.Cell color={"#0fa4d3"}> Overall</Table.Cell>
+                            <Table.Cell textAlign={"center"} color={"#9333E9"}>
+                              {" "}
+                              {(
+                                (item.accuracy_of_answer +
+                                  item.understanding_of_question +
+                                  item.quality_of_answer +
+                                  item.subject_knowledge) /
+                                4
+                              ).toFixed(1)}
+                            </Table.Cell>
+                          </Table.Row>
+                        </Table.Body>
+                      </Table.Root>
+                    </Box>
+                    <Show when={getRecording("6762ffbd8bd530f9c35b3830") ? true : false}>
+                      <Box maxW={"300px"}>
+                        <video
+                          width={"100%"}
+                          controls // Adds video controls (play, pause, volume, etc.)
+                          style={{
+                            borderRadius: "8px", // Optional: rounded corners for the video window
+                            border: "2px solid #ddd", // Optional: adds a light border around the video
+                          }}
+                          src={getRecording("6762ffbd8bd530f9c35b3830")} // Assuming this returns a Blob URL or valid video URL
+                        />
+                      </Box>
+                    </Show>
+                  </Flex>
                 </Box>
               );
             })}

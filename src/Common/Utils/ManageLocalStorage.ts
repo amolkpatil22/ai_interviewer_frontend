@@ -1,5 +1,6 @@
 export interface LocalStorageKeys {
   isLoggedIn: boolean;
+  savedTime: number;
 }
 
 export const setItemToLocalStorage = <T extends keyof LocalStorageKeys>(key: T, value: LocalStorageKeys[T]) => {

@@ -46,3 +46,16 @@ export const getDataFromIndexDb = async (dbName: string, question_id: string): P
     request.onerror = () => reject("Error fetching data");
   });
 };
+
+export const getAllDataFromIndexDb = async (dbName: string): Promise<{ question_id: string; blob: Blob }[]> => {
+  const db = await openDatabaseInIndexDb(dbName, 1);
+  const transaction = db.transaction("media", "readonly");
+  const store = transaction.objectStore("media");
+
+  const request = store.getAll();
+
+  return new Promise((resolve, reject) => {
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject("Error fetching all data");
+  });
+};

@@ -1,6 +1,7 @@
 export interface FeedbackObject {
   _id: string;
   answer_id: string;
+  question_id: string;
   understanding_of_question: number;
   accuracy_of_answer: number;
   subject_knowledge: number;

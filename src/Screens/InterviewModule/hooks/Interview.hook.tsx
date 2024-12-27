@@ -12,6 +12,7 @@ import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognitio
 import { BotModes } from "../../../Common/Interfaces/BotModes.interface";
 import { submitCandidatesAnswer } from "../https/InterviewModule.https";
 import { toaster } from "../../../Components/ui/toaster";
+import { getItemFromLocalStorage, setItemToLocalStorage } from "../../../Common/Utils/ManageLocalStorage";
 
 export const useInterviewModule = () => {
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -172,6 +173,7 @@ export const useInterviewModule = () => {
   useEffect(() => {
     if (timeLeft === 0) return;
     const interval = setInterval(() => {
+      setItemToLocalStorage("savedTime", timeLeft - 1);
       setTimeLeft((prevTime) => prevTime - 1);
     }, 1000);
     return () => clearInterval(interval);
@@ -189,7 +191,12 @@ export const useInterviewModule = () => {
       });
 
       setHasPermission(true);
-      setTimeLeft(3600);
+      let savedTime = getItemFromLocalStorage("savedTime");
+      if (savedTime && question_id) {
+        setTimeLeft(savedTime);
+      } else {
+        setTimeLeft(3600);
+      }
     } catch (err: any) {
       setHasPermission(false);
     }
